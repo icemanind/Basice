@@ -58,6 +58,7 @@
     <Compile Include="Interpreter\Stdlib\Mid.cs" />
     <Compile Include="Interpreter\Stdlib\Rgb.cs" />
     <Compile Include="Interpreter\Stdlib\Right.cs" />
+    <Compile Include="Interpreter\Stdlib\Rnd.cs" />
     <Compile Include="Interpreter\Stdlib\Str.cs" />
     <Compile Include="Interpreter\Stdlib\Val.cs" />
     <Compile Include="Lexer\Scanner.cs" />

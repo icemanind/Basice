@@ -26,14 +26,34 @@ namespace Basice.Interpreter.Parser
             }
         }
 
+        public class EndStatement : Statement
+        {
+            public EndStatement(int basicLineNumber)
+            {
+                BasicLineNumber = basicLineNumber;
+            }
+        }
+
+        public class GotoStatement : Statement
+        {
+            public int LineNumber { get; }
+
+            public GotoStatement(int lineNumber, int basicLineNumber)
+            {
+                BasicLineNumber= basicLineNumber;
+                LineNumber = lineNumber;
+            }
+        }
+
         public class IfStatement : Statement
         {
             public Expression Condition { get; }
             public Statement ThenBranch { get; }
             public Statement ElseBranch { get; }
 
-            public IfStatement(Expression condition, Statement thenBranch, Statement elseBranch)
+            public IfStatement(Expression condition, Statement thenBranch, Statement elseBranch, int basicLineNumber)
             {
+                BasicLineNumber = basicLineNumber;
                 Condition = condition;
                 ThenBranch = thenBranch;
                 ElseBranch = elseBranch;

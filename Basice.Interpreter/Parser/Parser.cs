@@ -130,6 +130,8 @@ namespace Basice.Interpreter.Parser
         private Statement Statement()
         {
             if (Match(TokenType.Cls)) return ClsStatement();
+            if (Match(TokenType.End)) return EndStatement();
+            if (Match(TokenType.Goto)) return GotoStatement();
             if (Match(TokenType.If)) return IfStatement();
             if (Match(TokenType.Locate)) return LocateStatement();
             if (Match(TokenType.Print)) return PrintStatement();
@@ -140,7 +142,35 @@ namespace Basice.Interpreter.Parser
         #region "Expressions"
         private Expression Expression()
         {
-            return Equality();
+            return Or();
+        }
+
+        private Expression Or()
+        {
+            Expression expression = And();
+
+            while (Match(TokenType.Or))
+            {
+                Token op = Previous();
+                Expression right = And();
+                expression = new Expression.Logical(expression, op, right);
+            }
+
+            return expression;
+        }
+
+        private Expression And()
+        {
+            Expression expression = Equality();
+
+            while (Match(TokenType.And))
+            {
+                Token op = Previous();
+                Expression right = And();
+                expression = new Expression.Logical(expression, op, right);
+            }
+
+            return expression;
         }
 
         private Expression Equality()
@@ -202,7 +232,7 @@ namespace Basice.Interpreter.Parser
 
         private Expression Unary()
         {
-            if (Match(TokenType.Minus))
+            if (Match(TokenType.Minus) || Match(TokenType.Not))
             {
                 Token @operator = Previous();
                 Expression right = Unary();
@@ -288,6 +318,21 @@ namespace Basice.Interpreter.Parser
             return new Statement.ClsStatement(_currentBasicLineNumber);
         }
 
+        private Statement EndStatement()
+        {
+            return new Statement.EndStatement(_currentBasicLineNumber);
+        }
+
+        private Statement GotoStatement()
+        {
+            if (!Match(TokenType.Number))
+            {
+                throw new ParserException(Error("Expected number after GOTO", Peek()));
+            }
+
+            return new Statement.GotoStatement((int)(double)Previous().Literal, _currentBasicLineNumber);
+        }
+
         private Statement IfStatement()
         {
             Expression condition = Expression();
@@ -320,7 +365,7 @@ namespace Basice.Interpreter.Parser
                 elseClause = new Statement.Block(elseStatements, _currentBasicLineNumber);
             }
 
-            return new Statement.IfStatement(condition, thenBranch, elseClause);
+            return new Statement.IfStatement(condition, thenBranch, elseClause, _currentBasicLineNumber);
         }
 
         private Statement LocateStatement()

@@ -17,7 +17,7 @@ namespace Basice.UI
         public MainForm()
         {
             InitializeComponent();
-            txtProgram.Text = "10 CLS:a=25" + Environment.NewLine + "20 IF a=15 THEN locate 3,30:PRINT\"True\" ELSE locate 3,30:PRINT\"False\"" + Environment.NewLine ;
+            txtProgram.Text = "10 CLS" + Environment.NewLine + "20 a=1" + Environment.NewLine+"30 print a"+Environment.NewLine+"40 a=a+1"+Environment.NewLine + "50 IF a>5 THEN GOTO 70"+Environment.NewLine+"60 GOTO 30"+Environment.NewLine+"70 PRINT \"Done\""+Environment.NewLine;
         }
 
         private async void BtnRunProgram_Click(object sender, EventArgs e)

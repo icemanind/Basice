@@ -12,10 +12,12 @@ namespace Basice.Interpreter.Interpreter
         private readonly ITextOutput _textOutputDevice;
         private readonly Dictionary<string, object> _variables;
         private readonly Dictionary<string, ICallable> _stdLib;
+        private int _currentStatementIndex;
 
         public Interpreter(List<Statement> statements, ITextOutput textOutputDevice)
         {
             _statements = statements;
+            _currentStatementIndex = 0;
             _textOutputDevice = textOutputDevice;
             _variables = new Dictionary<string, object>();
             _stdLib = new Dictionary<string, ICallable>
@@ -29,6 +31,7 @@ namespace Basice.Interpreter.Interpreter
                 { "LEN", new Stdlib.Len() },
                 { "MID$", new Stdlib.Mid() },
                 { "RGB", new Stdlib.Rgb() },
+                { "RND", new Stdlib.Rnd() },
                 { "RIGHT$", new Stdlib.Right() },
                 { "STR$", new Stdlib.Str() },
                 { "VAL", new Stdlib.Val() }
@@ -37,9 +40,10 @@ namespace Basice.Interpreter.Interpreter
 
         public async Task InterpretAsync()
         {
-            foreach (var statement in _statements)
+            while (_currentStatementIndex < _statements.Count)
             {
-                await ExecuteAsync(statement);
+                await ExecuteAsync(_statements[_currentStatementIndex]);
+                _currentStatementIndex++;
             }
         }
 
@@ -52,6 +56,12 @@ namespace Basice.Interpreter.Interpreter
                     break;
                 case nameof(Statement.ClsStatement):
                     await ClsAsync();
+                    break;
+                case nameof(Statement.EndStatement):
+                    End();
+                    break;
+                case nameof(Statement.GotoStatement):
+                    Goto((Statement.GotoStatement)statement);
                     break;
                 case nameof(Statement.IfStatement):
                     await IfAsync((Statement.IfStatement)statement);
@@ -88,6 +98,25 @@ namespace Basice.Interpreter.Interpreter
             {
                 _textOutputDevice.ClearScreen();
             }
+        }
+
+        private void End()
+        {
+            _currentStatementIndex = _statements.Count;
+        }
+
+        private void Goto(Statement.GotoStatement statement)
+        {
+            foreach (Statement s in _statements)
+            {
+                if (s.BasicLineNumber == statement.LineNumber)
+                {
+                    _currentStatementIndex = _statements.IndexOf(s) - 1;
+                    return;
+                }
+            }
+
+            throw new RuntimeException($"No such line number [{statement.LineNumber}].", statement.BasicLineNumber);
         }
 
         private async Task IfAsync(Statement.IfStatement statement)
@@ -173,6 +202,8 @@ namespace Basice.Interpreter.Interpreter
                     return EvaluateGrouping((Expression.Grouping)expression);
                 case nameof(Expression.Literal):
                     return EvaluateLiteral((Expression.Literal)expression);
+                case nameof(Expression.Logical):
+                    return EvaluateLogical((Expression.Logical)expression);
                 case nameof(Expression.Unary):
                     return EvaluateUnary((Expression.Unary)expression);
                 case nameof(Expression.Variable):
@@ -266,6 +297,22 @@ namespace Basice.Interpreter.Interpreter
             return expression.Value;
         }
 
+        private object EvaluateLogical(Expression.Logical expression)
+        {
+            object left = Evaluate(expression.Left);
+
+            if (expression.Operator.Type == TokenType.Or)
+            {
+                if (IsTruthy(left)) return left;
+            }
+            else
+            {
+                if (!IsTruthy(left)) return left;
+            }
+
+            return Evaluate(expression.Right);
+        }
+
         private object EvaluateUnary(Expression.Unary expression)
         {
             object right = Evaluate(expression.Right);
@@ -275,6 +322,9 @@ namespace Basice.Interpreter.Interpreter
                 case TokenType.Minus:
                     IsNumberOperand(expression.Operator, right);
                     return -(double)right;
+                case TokenType.Not:
+                    IsNumberOperand(expression.Operator, right);
+                    return ((double)right).Equals(1) ? (double)0 : (double)1;
             }
 
             return null;
@@ -299,8 +349,8 @@ namespace Basice.Interpreter.Interpreter
             }
             else
             {
-                _variables.Add(expression.Name.Lexeme.ToUpper(), 0);
-                return 0;
+                _variables.Add(expression.Name.Lexeme.ToUpper(), (double)0);
+                return (double)0;
             }
         }
         #endregion
@@ -337,7 +387,9 @@ namespace Basice.Interpreter.Interpreter
 
         private bool IsTruthy(object obj)
         {
-            return ((double)obj).Equals(1);
+            if (obj is double) return ((double)obj).Equals(1);
+            
+            throw new System.Exception();
         }
         #endregion
     }

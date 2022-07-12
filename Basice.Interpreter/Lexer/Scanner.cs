@@ -23,10 +23,15 @@ namespace Basice.Interpreter.Lexer
             _current = 0;
             _line = 1;
 
+            _keywords.Add("AND", TokenType.And);
             _keywords.Add("CLS", TokenType.Cls);
             _keywords.Add("ELSE", TokenType.Else);
+            _keywords.Add("END", TokenType.End);
+            _keywords.Add("GOTO", TokenType.Goto);
             _keywords.Add("IF", TokenType.If);
             _keywords.Add("LOCATE", TokenType.Locate);
+            _keywords.Add("NOT", TokenType.Not);
+            _keywords.Add("OR", TokenType.Or);
             _keywords.Add("PRINT", TokenType.Print);
             _keywords.Add("THEN", TokenType.Then);
         }
@@ -35,7 +40,6 @@ namespace Basice.Interpreter.Lexer
         {
             while (!IsAtEnd())
             {
-                // We are at the beginning of the next lexeme.
                 _start = _current;
                 ScanToken();
             }
