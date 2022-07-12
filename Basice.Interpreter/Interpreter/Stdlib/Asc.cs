@@ -4,7 +4,7 @@ using Basice.Interpreter.Lexer;
 
 namespace Basice.Interpreter.Interpreter.Stdlib
 {
-    public class Val : ICallable
+    public class Asc : ICallable
     {
         public int NumberOfArguments()
         {
@@ -15,17 +15,14 @@ namespace Basice.Interpreter.Interpreter.Stdlib
         {
             if (!(arguments[0] is string))
             {
-                throw new RuntimeException("VAL argument must be a string.", token);
+                throw new RuntimeException("ASC argument must be a string.", token);
             }
 
             string strValue = (string)arguments[0];
 
-            if (double.TryParse(strValue, out double result))
-            {
-                return result;
-            }
+            if (strValue.Length == 0) return (double)0;
 
-            return (double)0;
+            return (double)((int)strValue[0]);
         }
     }
 }

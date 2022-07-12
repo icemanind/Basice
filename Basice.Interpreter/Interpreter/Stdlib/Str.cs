@@ -16,7 +16,7 @@ namespace Basice.Interpreter.Interpreter.Stdlib
         {
             if (!(arguments[0] is double))
             {
-                throw new RuntimeException("Str$ argument must be a number.", token);
+                throw new RuntimeException("STR$ argument must be a number.", token);
             }
 
             double value = (double)arguments[0];

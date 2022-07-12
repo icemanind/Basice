@@ -15,7 +15,7 @@ namespace Basice.Interpreter.Interpreter.Stdlib
         {
             if (!(arguments[0] is string))
             {
-                throw new RuntimeException("Len argument must be a string.", token);
+                throw new RuntimeException("LEN argument must be a string.", token);
             }
 
             string strValue = (string)arguments[0];

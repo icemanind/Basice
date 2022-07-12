@@ -17,9 +17,6 @@ namespace Basice.UI
         public MainForm()
         {
             InitializeComponent();
-
-            txtProgram.Text = "10 CLS" + Environment.NewLine + "20 LOCATE 1,2" + Environment.NewLine +
-                              "30 PRINT RGB(0,0,0)" + Environment.NewLine;
         }
 
         private async void BtnRunProgram_Click(object sender, EventArgs e)

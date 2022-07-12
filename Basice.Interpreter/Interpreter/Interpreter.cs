@@ -20,6 +20,9 @@ namespace Basice.Interpreter.Interpreter
             _variables = new Dictionary<string, object>();
             _stdLib = new Dictionary<string, ICallable>();
 
+            _stdLib.Add("ASC", new Stdlib.Asc());
+            _stdLib.Add("CHR$", new Stdlib.Chr());
+            _stdLib.Add("INT", new Stdlib.Int());
             _stdLib.Add("LEFT$", new Stdlib.Left());
             _stdLib.Add("LEN", new Stdlib.Len());
             _stdLib.Add("MID$", new Stdlib.Mid());
