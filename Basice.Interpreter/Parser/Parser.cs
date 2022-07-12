@@ -130,6 +130,7 @@ namespace Basice.Interpreter.Parser
         private Statement Statement()
         {
             if (Match(TokenType.Cls)) return ClsStatement();
+            if (Match(TokenType.If)) return IfStatement();
             if (Match(TokenType.Locate)) return LocateStatement();
             if (Match(TokenType.Print)) return PrintStatement();
 
@@ -139,7 +140,36 @@ namespace Basice.Interpreter.Parser
         #region "Expressions"
         private Expression Expression()
         {
-            return Term();
+            return Equality();
+        }
+
+        private Expression Equality()
+        {
+            Expression expression = Comparison();
+
+            while (Match(TokenType.NotEqual, TokenType.Equal))
+            {
+                Token op = Previous();
+                Expression right = Comparison();
+                expression = new Expression.Binary(expression, op, right);
+            }
+
+            return expression;
+        }
+
+        private Expression Comparison()
+        {
+            Expression expression = Term();
+
+            while (Match(TokenType.GreaterThan, TokenType.GreaterThanOrEqual, TokenType.LessThan,
+                       TokenType.LessThanOrEqual))
+            {
+                Token op = Previous();
+                Expression right = Term();
+                expression = new Expression.Binary(expression, op, right);
+            }
+
+            return expression;
         }
 
         private Expression Term()
@@ -256,6 +286,41 @@ namespace Basice.Interpreter.Parser
         private Statement ClsStatement()
         {
             return new Statement.ClsStatement(_currentBasicLineNumber);
+        }
+
+        private Statement IfStatement()
+        {
+            Expression condition = Expression();
+
+            if (!Match(TokenType.Then))
+            {
+                throw new ParserException(Error("Expected 'THEN' after 'IF' condition", _tokens[_current]));
+            }
+
+            var statements = new List<Statement>();
+            do
+            {
+                while (Match(TokenType.Colon)) ;
+                statements.Add(Declaration());
+            } while (!IsAtEnd() && Peek().Type == TokenType.Colon && Peek().Type != TokenType.Else);
+
+            Statement thenBranch = new Statement.Block(statements, _currentBasicLineNumber);
+            Statement elseClause = null;
+
+            if (Match(TokenType.Else))
+            {
+                var elseStatements = new List<Statement>();
+
+                do
+                {
+                    while (Match(TokenType.Colon)) ;
+                    elseStatements.Add(Declaration());
+                } while (!IsAtEnd() && Peek().Type == TokenType.Colon);
+
+                elseClause = new Statement.Block(elseStatements, _currentBasicLineNumber);
+            }
+
+            return new Statement.IfStatement(condition, thenBranch, elseClause);
         }
 
         private Statement LocateStatement()

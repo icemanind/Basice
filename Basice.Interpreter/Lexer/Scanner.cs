@@ -24,8 +24,11 @@ namespace Basice.Interpreter.Lexer
             _line = 1;
 
             _keywords.Add("CLS", TokenType.Cls);
+            _keywords.Add("ELSE", TokenType.Else);
+            _keywords.Add("IF", TokenType.If);
             _keywords.Add("LOCATE", TokenType.Locate);
             _keywords.Add("PRINT", TokenType.Print);
+            _keywords.Add("THEN", TokenType.Then);
         }
 
         public List<Token> ScanTokens()
@@ -57,6 +60,33 @@ namespace Basice.Interpreter.Lexer
                 case ':': AddToken(TokenType.Colon); break;
                 case ';': AddToken(TokenType.SemiColon); break;
                 case ',': AddToken(TokenType.Comma); break;
+                case '<':
+                    if (Peek() == '=')
+                    {
+                        _current++;
+                        AddToken(TokenType.LessThanOrEqual);
+                        break;
+                    }
+
+                    if (Peek() == '>')
+                    {
+                        _current++;
+                        AddToken(TokenType.NotEqual);
+                        break;
+                    }
+
+                    AddToken(TokenType.LessThan);
+                    break;
+                case '>':
+                    if (Peek() == '=')
+                    {
+                        _current++;
+                        AddToken(TokenType.GreaterThanOrEqual);
+                        break;
+                    }
+
+                    AddToken(TokenType.GreaterThan);
+                    break;
 
                 case '\'':
                     while (Peek() != '\n' && !IsAtEnd()) Advance();

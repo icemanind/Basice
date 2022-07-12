@@ -9,7 +9,7 @@ namespace Basice.Interpreter.Interpreter
     public class Interpreter
     {
         private readonly List<Statement> _statements;
-        private ITextOutput _textOutputDevice;
+        private readonly ITextOutput _textOutputDevice;
         private readonly Dictionary<string, object> _variables;
         private readonly Dictionary<string, ICallable> _stdLib;
 
@@ -18,18 +18,21 @@ namespace Basice.Interpreter.Interpreter
             _statements = statements;
             _textOutputDevice = textOutputDevice;
             _variables = new Dictionary<string, object>();
-            _stdLib = new Dictionary<string, ICallable>();
-
-            _stdLib.Add("ASC", new Stdlib.Asc());
-            _stdLib.Add("CHR$", new Stdlib.Chr());
-            _stdLib.Add("INT", new Stdlib.Int());
-            _stdLib.Add("LEFT$", new Stdlib.Left());
-            _stdLib.Add("LEN", new Stdlib.Len());
-            _stdLib.Add("MID$", new Stdlib.Mid());
-            _stdLib.Add("RGB", new Stdlib.Rgb());
-            _stdLib.Add("RIGHT$", new Stdlib.Right());
-            _stdLib.Add("STR$", new Stdlib.Str());
-            _stdLib.Add("VAL", new Stdlib.Val());
+            _stdLib = new Dictionary<string, ICallable>
+            {
+                { "ABS", new Stdlib.Abs() },
+                { "ASC", new Stdlib.Asc() },
+                { "CHR$", new Stdlib.Chr() },
+                { "HEX$", new Stdlib.Hex() },
+                { "INT", new Stdlib.Int() },
+                { "LEFT$", new Stdlib.Left() },
+                { "LEN", new Stdlib.Len() },
+                { "MID$", new Stdlib.Mid() },
+                { "RGB", new Stdlib.Rgb() },
+                { "RIGHT$", new Stdlib.Right() },
+                { "STR$", new Stdlib.Str() },
+                { "VAL", new Stdlib.Val() }
+            };
         }
 
         public async Task InterpretAsync()
@@ -44,8 +47,14 @@ namespace Basice.Interpreter.Interpreter
         {
             switch (statement.GetType().Name)
             {
+                case nameof(Statement.Block):
+                    await BlockAsync((Statement.Block)statement);
+                    break;
                 case nameof(Statement.ClsStatement):
                     await ClsAsync();
+                    break;
+                case nameof(Statement.IfStatement):
+                    await IfAsync((Statement.IfStatement)statement);
                     break;
                 case nameof(Statement.LocateStatement):
                     Locate((Statement.LocateStatement)statement);
@@ -61,6 +70,14 @@ namespace Basice.Interpreter.Interpreter
 
         #region "Statement Methods"
 
+        private async Task BlockAsync(Statement.Block statements)
+        {
+            foreach (Statement statement in statements.Statements)
+            {
+                await ExecuteAsync(statement);
+            }
+        }
+
         private async Task ClsAsync()
         {
             if (_textOutputDevice.AsyncAvailable)
@@ -71,6 +88,19 @@ namespace Basice.Interpreter.Interpreter
             {
                 _textOutputDevice.ClearScreen();
             }
+        }
+
+        private async Task IfAsync(Statement.IfStatement statement)
+        {
+            if (IsTruthy(Evaluate(statement.Condition)))
+            {
+                await ExecuteAsync(statement.ThenBranch);
+            } else if (statement.ElseBranch != null)
+            {
+                await ExecuteAsync(statement.ElseBranch);
+            }
+
+            return;
         }
 
         private void Locate(Statement.LocateStatement statement)
@@ -159,6 +189,18 @@ namespace Basice.Interpreter.Interpreter
 
             switch (expression.Operator.Type)
             {
+                case TokenType.GreaterThan:
+                    return (double)left > (double)right ? (double)1 : (double)0;
+                case TokenType.GreaterThanOrEqual:
+                    return (double)left >= (double)right ? (double)1 : (double)0;
+                case TokenType.LessThan:
+                    return (double)left < (double)right ? (double)1 : (double)0;
+                case TokenType.LessThanOrEqual:
+                    return (double)left <= (double)right ? (double)1 : (double)0;
+                case TokenType.NotEqual:
+                    return !IsEqual(left, right) ? (double)1 : (double)0;
+                case TokenType.Equal:
+                    return IsEqual(left, right) ? (double)1 : (double)0;
                 case TokenType.Plus:
                     if (left is double && right is double)
                     {
@@ -286,6 +328,16 @@ namespace Basice.Interpreter.Interpreter
             {
                 throw new RuntimeException("You cannot divide by zero.", @operator);
             }
+        }
+
+        private bool IsEqual(object obj1, object obj2)
+        {
+            return obj1.Equals(obj2);
+        }
+
+        private bool IsTruthy(object obj)
+        {
+            return ((double)obj).Equals(1);
         }
         #endregion
     }

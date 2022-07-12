@@ -1,4 +1,5 @@
-﻿using Basice.Interpreter.Lexer;
+﻿using System.Collections.Generic;
+using Basice.Interpreter.Lexer;
 
 namespace Basice.Interpreter.Parser
 {
@@ -6,11 +7,36 @@ namespace Basice.Interpreter.Parser
     {
         public int BasicLineNumber { get; set; }
 
+        public class Block : Statement
+        {
+            public List<Statement> Statements { get; }
+
+            public Block(List<Statement> statements, int basicLineNumber)
+            {
+                BasicLineNumber = basicLineNumber;
+                Statements = statements;
+            }
+        }
+
         public class ClsStatement : Statement
         {
             public ClsStatement(int basicLineNumber)
             {
                 BasicLineNumber = basicLineNumber;
+            }
+        }
+
+        public class IfStatement : Statement
+        {
+            public Expression Condition { get; }
+            public Statement ThenBranch { get; }
+            public Statement ElseBranch { get; }
+
+            public IfStatement(Expression condition, Statement thenBranch, Statement elseBranch)
+            {
+                Condition = condition;
+                ThenBranch = thenBranch;
+                ElseBranch = elseBranch;
             }
         }
 

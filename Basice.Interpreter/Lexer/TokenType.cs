@@ -7,13 +7,14 @@
 
         // Operators
         LeftParenthesis, RightParenthesis, Minus, Plus, Slash, Star, Equal,
-        SemiColon, Colon, Comma,
+        SemiColon, Colon, Comma, LessThan, GreaterThan, LessThanOrEqual, GreaterThanOrEqual,
+        NotEqual,
 
         // Newline
         NewLine,
 
         // Statements
-        Cls, Print, Locate,
+        Cls, Else, If, Locate, Print, Then,
 
         // No Operation
         Nop,

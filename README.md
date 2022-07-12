@@ -39,7 +39,7 @@ Comments are allowed and begin with an apostrophe `'`. Comments must also be on 
     10 ' This program will print HELLO WORLD!!!
     20 PRINT "HELLO WORLD!!!"
     
-Basice only has two data types, strings and numbers. A number can be a whole integer number or a floating point number. Full expressions are permitted:
+Basice only has two data types: strings and numbers. A string is a sequence of characters between two double quotes `""`. A number can be a whole integer number or a floating point number. Full expressions are permitted:
 
     10 ' This program will print 356.9
     20 PRINT 12 * 38.4 + 7 * 2.3 - 8 * (9+6)
