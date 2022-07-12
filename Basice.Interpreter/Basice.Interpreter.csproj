@@ -48,7 +48,13 @@
     <Compile Include="Interpreter\ICallable.cs" />
     <Compile Include="Interpreter\Interpreter.cs" />
     <Compile Include="Interpreter\ITextOutput.cs" />
+    <Compile Include="Interpreter\Stdlib\Left.cs" />
+    <Compile Include="Interpreter\Stdlib\Len.cs" />
+    <Compile Include="Interpreter\Stdlib\Mid.cs" />
     <Compile Include="Interpreter\Stdlib\Rgb.cs" />
+    <Compile Include="Interpreter\Stdlib\Right.cs" />
+    <Compile Include="Interpreter\Stdlib\Str.cs" />
+    <Compile Include="Interpreter\Stdlib\Val.cs" />
     <Compile Include="Lexer\Scanner.cs" />
     <Compile Include="Lexer\Token.cs" />
     <Compile Include="Lexer\TokenType.cs" />

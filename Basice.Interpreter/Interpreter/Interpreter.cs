@@ -20,7 +20,13 @@ namespace Basice.Interpreter.Interpreter
             _variables = new Dictionary<string, object>();
             _stdLib = new Dictionary<string, ICallable>();
 
+            _stdLib.Add("LEFT$", new Stdlib.Left());
+            _stdLib.Add("LEN", new Stdlib.Len());
+            _stdLib.Add("MID$", new Stdlib.Mid());
             _stdLib.Add("RGB", new Stdlib.Rgb());
+            _stdLib.Add("RIGHT$", new Stdlib.Right());
+            _stdLib.Add("STR$", new Stdlib.Str());
+            _stdLib.Add("VAL", new Stdlib.Val());
         }
 
         public async Task InterpretAsync()
