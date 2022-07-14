@@ -34,6 +34,23 @@ namespace Basice.Interpreter.Parser
             }
         }
 
+        public class ForStatement : Statement
+        {
+            public Token Variable { get; }
+            public Expression Start { get; }
+            public Expression End { get; }
+            public Expression Step { get; }
+
+            public ForStatement(Token variable, Expression start, Expression end, Expression step, int basicLineNumber)
+            {
+                BasicLineNumber = basicLineNumber;
+                Variable = variable;
+                Start = start;  
+                End = end;
+                Step = step;
+            }
+        }
+
         public class GotoStatement : Statement
         {
             public int LineNumber { get; }
@@ -60,6 +77,19 @@ namespace Basice.Interpreter.Parser
             }
         }
 
+        public class IncrementStatement : Statement
+        {
+            public Token Token { get; }
+            public Expression Value { get; }
+
+            public IncrementStatement(Token token, Expression value, int basicLineNumber)
+            {
+                BasicLineNumber=basicLineNumber;
+                Token = token;
+                Value = value;
+            }
+        }
+
         public class LocateStatement : Statement
         {
             public Expression Y { get; }
@@ -70,6 +100,14 @@ namespace Basice.Interpreter.Parser
                 BasicLineNumber = basicLineNumber;
                 Y = y;
                 X = x;
+            }
+        }
+
+        public class NextStatement : Statement
+        {
+            public NextStatement(int basicLineNumber)
+            {
+                BasicLineNumber = basicLineNumber;
             }
         }
 
@@ -84,11 +122,13 @@ namespace Basice.Interpreter.Parser
         public class PrintStatement : Statement
         {
             public Expression Expression { get; }
+            public bool AddCrLf { get; }
 
-            public PrintStatement(Expression expression, int basicLineNumber)
+            public PrintStatement(Expression expression, bool addCrLf, int basicLineNumber)
             {
                 BasicLineNumber = basicLineNumber;
                 Expression = expression;
+                AddCrLf = addCrLf;
             }
         }
 

@@ -6,7 +6,7 @@ namespace Basice.Interpreter.Lexer
 {
     public class Scanner
     {
-        private readonly string _program;
+        private string _program;
         private readonly List<Token> _tokens;
         private readonly Dictionary<string, TokenType> _keywords;
         private int _start;
@@ -27,13 +27,17 @@ namespace Basice.Interpreter.Lexer
             _keywords.Add("CLS", TokenType.Cls);
             _keywords.Add("ELSE", TokenType.Else);
             _keywords.Add("END", TokenType.End);
+            _keywords.Add("FOR", TokenType.For);
             _keywords.Add("GOTO", TokenType.Goto);
             _keywords.Add("IF", TokenType.If);
             _keywords.Add("LOCATE", TokenType.Locate);
+            _keywords.Add("NEXT", TokenType.Next);
             _keywords.Add("NOT", TokenType.Not);
             _keywords.Add("OR", TokenType.Or);
             _keywords.Add("PRINT", TokenType.Print);
+            _keywords.Add("STEP", TokenType.Step);
             _keywords.Add("THEN", TokenType.Then);
+            _keywords.Add("TO", TokenType.To);
         }
 
         public List<Token> ScanTokens()
@@ -64,6 +68,13 @@ namespace Basice.Interpreter.Lexer
                 case ':': AddToken(TokenType.Colon); break;
                 case ';': AddToken(TokenType.SemiColon); break;
                 case ',': AddToken(TokenType.Comma); break;
+                case '.':
+                    if (IsDigit(Peek()))
+                    {
+                        _program = _program.Insert(_current - 1, "0");
+                        _current--;
+                    }
+                    break;
                 case '<':
                     if (Peek() == '=')
                     {

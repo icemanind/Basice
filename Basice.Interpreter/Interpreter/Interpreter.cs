@@ -13,9 +13,11 @@ namespace Basice.Interpreter.Interpreter
         private readonly Dictionary<string, object> _variables;
         private readonly Dictionary<string, ICallable> _stdLib;
         private int _currentStatementIndex;
+        private readonly Stack<Statement.ForStatement> _forStack;
 
         public Interpreter(List<Statement> statements, ITextOutput textOutputDevice)
         {
+            _forStack = new Stack<Statement.ForStatement>();
             _statements = statements;
             _currentStatementIndex = 0;
             _textOutputDevice = textOutputDevice;
@@ -60,6 +62,9 @@ namespace Basice.Interpreter.Interpreter
                 case nameof(Statement.EndStatement):
                     End();
                     break;
+                case nameof(Statement.ForStatement):
+                    await ForAsync((Statement.ForStatement)statement);
+                    break;
                 case nameof(Statement.GotoStatement):
                     Goto((Statement.GotoStatement)statement);
                     break;
@@ -103,6 +108,72 @@ namespace Basice.Interpreter.Interpreter
         private void End()
         {
             _currentStatementIndex = _statements.Count;
+        }
+
+        private async Task ForAsync(Statement.ForStatement statement)
+        {
+            object start = Evaluate(statement.Start);
+            object end = Evaluate(statement.End);
+            object step = Evaluate(statement.Step);
+
+            if (!(start is double) || !(end is double) || !(step is double))
+            {
+                throw new RuntimeException("'FOR' must be a numeric expression.", statement.Variable);
+            }
+
+            if (statement.Variable.Lexeme.EndsWith("$"))
+            {
+                throw new RuntimeException("'FOR' variable must be numeric.", statement.Variable);
+            }
+
+            double dblStart = (double)start;
+            double dblEnd = (double)end;
+            double dblStep = (double)step;
+
+            if (_variables.ContainsKey(statement.Variable.Lexeme.ToUpper()))
+            {
+                _variables.Remove(statement.Variable.Lexeme.ToUpper());
+            }
+
+            _variables.Add(statement.Variable.Lexeme.ToUpper(), dblStart);
+
+            _currentStatementIndex++;
+            int currentIndex = _currentStatementIndex;
+            int currentNextIndex = _currentStatementIndex;
+
+            if (dblStep < 0)
+            {
+                while ((double)_variables[statement.Variable.Lexeme.ToUpper()] >= dblEnd)
+                {
+                    await ExecuteAsync(_statements[_currentStatementIndex]);
+                    _currentStatementIndex++;
+
+                    if (_statements[_currentStatementIndex] is Statement.NextStatement)
+                    {
+                        currentNextIndex = _currentStatementIndex;
+                        _currentStatementIndex = currentIndex;
+                        _variables[statement.Variable.Lexeme.ToUpper()] = (double)_variables[statement.Variable.Lexeme.ToUpper()] + dblStep;
+                    }
+                }
+                _currentStatementIndex = currentNextIndex;
+            }
+            else
+            {
+                while ((double)_variables[statement.Variable.Lexeme.ToUpper()] <= dblEnd)
+                {
+                    await ExecuteAsync(_statements[_currentStatementIndex]);
+                    _currentStatementIndex++;
+
+                    if (_statements[_currentStatementIndex] is Statement.NextStatement)
+                    {
+                        currentNextIndex = _currentStatementIndex;
+                        _currentStatementIndex = currentIndex;
+                        _variables[statement.Variable.Lexeme.ToUpper()] = (double)_variables[statement.Variable.Lexeme.ToUpper()] + dblStep;
+                    }
+                }
+                _currentStatementIndex = currentNextIndex;
+            }
+            
         }
 
         private void Goto(Statement.GotoStatement statement)
@@ -156,13 +227,15 @@ namespace Basice.Interpreter.Interpreter
         private async Task Print(Statement.PrintStatement statement)
         {
             object value = Evaluate(statement.Expression);
+            string crlf = statement.AddCrLf ? "\r\n" : "";
+
             if (_textOutputDevice.AsyncAvailable)
             {
-                await _textOutputDevice.PrintAsync(value.ToString(), _textOutputDevice.GetCursorPosition().Y, _textOutputDevice.GetCursorPosition().X);
+                await _textOutputDevice.PrintAsync(value + crlf, _textOutputDevice.GetCursorPosition().Y, _textOutputDevice.GetCursorPosition().X);
             }
             else
             {
-                _textOutputDevice.Print(value.ToString(), _textOutputDevice.GetCursorPosition().Y, _textOutputDevice.GetCursorPosition().X);
+                _textOutputDevice.Print(value + crlf, _textOutputDevice.GetCursorPosition().Y, _textOutputDevice.GetCursorPosition().X);
             }
         }
 

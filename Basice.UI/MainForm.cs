@@ -17,7 +17,8 @@ namespace Basice.UI
         public MainForm()
         {
             InitializeComponent();
-            txtProgram.Text = "10 CLS" + Environment.NewLine + "20 a=1" + Environment.NewLine+"30 print a"+Environment.NewLine+"40 a=a+1"+Environment.NewLine + "50 IF a>5 THEN GOTO 70"+Environment.NewLine+"60 GOTO 30"+Environment.NewLine+"70 PRINT \"Done\""+Environment.NewLine;
+            txtProgram.Text = "10 CLS" + Environment.NewLine + "20 FOR x=1 to 5" + Environment.NewLine +
+                              "30 PRINT x" + Environment.NewLine + "40 NEXT";
         }
 
         private async void BtnRunProgram_Click(object sender, EventArgs e)

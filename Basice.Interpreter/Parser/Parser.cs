@@ -1,20 +1,6 @@
-﻿using System.Collections.Generic;
-using Basice.Interpreter.Exceptions;
+﻿using Basice.Interpreter.Exceptions;
 using Basice.Interpreter.Lexer;
-
-/*
- *   program              ->  ( lineNumber declaration "\n" )* EOF ;
- *
- *   lineNumber           -> NUMBER ;
- *   declaration          -> IDENTIFIER "=" expression
- *                           | statement ;
- *   statement            -> (printStatement | clsStatement | locateStatement | rgbStatement) (":" declaration)? ;
- *
- *   clsStatement         -> "CLS" ;
- *   locateStatement      -> "LOCATE" expression "," expression ;
- *   printStatement       -> "PRINT" expression ;
- *   rgbStatement         -> "RGB" "(" expression "," expression "," expression ")" ;
- */
+using System.Collections.Generic;
 
 namespace Basice.Interpreter.Parser
 {
@@ -25,9 +11,11 @@ namespace Basice.Interpreter.Parser
         private int _current;
         private int _currentBasicLineNumber;
         private int _previousBasicLineNumber;
+        private readonly Stack<Statement.ForStatement> _forStack;
 
         public Parser(List<Token> tokens)
         {
+            _forStack = new Stack<Statement.ForStatement>();
             _basicLineNumbers = new List<int>();
             _tokens = tokens;
             _current = 0;
@@ -37,15 +25,18 @@ namespace Basice.Interpreter.Parser
 
         public List<Statement> Parse()
         {
+            _forStack.Clear();
             var statements = new List<Statement>();
 
             while (!IsAtEnd())
             {
                 statements.Add(LineNumber());
+
                 if (Peek().Type == TokenType.NewLine)
                 {
                     while (!IsAtEnd() && Match(TokenType.NewLine)) ;
-                } else if (Peek().Type == TokenType.Colon)
+                }
+                else if (Peek().Type == TokenType.Colon)
                 {
                     while (!IsAtEnd() && Match(TokenType.Colon))
                     {
@@ -61,6 +52,11 @@ namespace Basice.Interpreter.Parser
                 {
                     while (!IsAtEnd() && Match(TokenType.NewLine)) ;
                 }
+            }
+
+            if (_forStack.Count > 0)
+            {
+                throw new ParserException(Error("Missing 'NEXT' statement.", Previous()));
             }
 
             return statements;
@@ -131,9 +127,11 @@ namespace Basice.Interpreter.Parser
         {
             if (Match(TokenType.Cls)) return ClsStatement();
             if (Match(TokenType.End)) return EndStatement();
+            if (Match(TokenType.For)) return ForStatement();
             if (Match(TokenType.Goto)) return GotoStatement();
             if (Match(TokenType.If)) return IfStatement();
             if (Match(TokenType.Locate)) return LocateStatement();
+            if (Match(TokenType.Next)) return NextStatement();
             if (Match(TokenType.Print)) return PrintStatement();
 
             throw new ParserException(Error($"Unrecognized statement '{_tokens[_current].Lexeme}'", Previous()));
@@ -323,6 +321,47 @@ namespace Basice.Interpreter.Parser
             return new Statement.EndStatement(_currentBasicLineNumber);
         }
 
+        private Statement ForStatement()
+        {
+            Token initToken = Peek();
+            if (Peek().Type != TokenType.Identifier)
+            {
+                throw new ParserException(Error("Expected identifier after FOR.", Peek()));
+            }
+
+            Advance();
+            if (!Match(TokenType.Equal))
+            {
+                throw new ParserException(Error("Expected '=' after identifier.", Peek()));
+            }
+
+            Expression startExpression = Expression();
+
+            if (!Match(TokenType.To))
+            {
+                throw new ParserException(Error("Expected 'TO' after expression.", Peek()));
+            }
+
+            Expression endExpression = Expression();
+            Expression stepExpression;
+
+            if (Match(TokenType.Step))
+            {
+                stepExpression = Expression();
+            }
+            else
+            {
+                stepExpression = new Expression.Literal((double)1);
+            }
+
+            var statement = new Statement.ForStatement(initToken, startExpression, endExpression, stepExpression,
+                _currentBasicLineNumber);
+
+            _forStack.Push(statement);
+
+            return statement;
+        }
+
         private Statement GotoStatement()
         {
             if (!Match(TokenType.Number))
@@ -381,11 +420,35 @@ namespace Basice.Interpreter.Parser
             return new Statement.LocateStatement(y, x, _currentBasicLineNumber);
         }
 
+        private Statement NextStatement()
+        {
+            if (_forStack.Count == 0)
+            {
+                throw new ParserException(Error("'NEXT' without matching 'FOR'.", Peek()));
+            }
+
+            if (Match(TokenType.Identifier))
+            {
+                if (Previous().Lexeme != _forStack.Peek().Variable.Lexeme)
+                {
+                    throw new ParserException(Error("'NEXT' identifier does not match 'FOR' identifier.", Previous()));
+                }
+            }
+
+            _forStack.Pop();
+
+            return new Statement.NextStatement(_currentBasicLineNumber);
+        }
+
         private Statement PrintStatement()
         {
             Expression value = Expression();
 
-            return new Statement.PrintStatement(value, _currentBasicLineNumber);
+            if (Match(TokenType.SemiColon))
+            {
+                return new Statement.PrintStatement(value, false, _currentBasicLineNumber);
+            }
+            return new Statement.PrintStatement(value, true, _currentBasicLineNumber);
         }
 
         #endregion

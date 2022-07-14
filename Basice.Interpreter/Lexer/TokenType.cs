@@ -14,7 +14,7 @@
         NewLine,
 
         // Statements
-        And, Cls, Else, End, Goto, If, Locate, Or, Not, Print, Then, 
+        And, Cls, Else, End, For, Goto, If, Locate, Or, Next, Not, Print, Step, Then, To,
 
         // No Operation
         Nop,
