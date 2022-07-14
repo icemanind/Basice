@@ -59,6 +59,9 @@ namespace Basice.Interpreter.Interpreter
                 case nameof(Statement.ClsStatement):
                     await ClsAsync();
                     break;
+                case nameof(Statement.DimStatement):
+                    Dim((Statement.DimStatement)statement);
+                    break;
                 case nameof(Statement.EndStatement):
                     End();
                     break;
@@ -76,6 +79,9 @@ namespace Basice.Interpreter.Interpreter
                     break;
                 case nameof(Statement.PrintStatement):
                     await Print((Statement.PrintStatement)statement);
+                    break;
+                case nameof(Statement.VariableArrayStatement):
+                    DefineArrayVariable((Statement.VariableArrayStatement)statement);
                     break;
                 case nameof(Statement.VariableStatement):
                     DefineVariable((Statement.VariableStatement)statement);
@@ -102,6 +108,42 @@ namespace Basice.Interpreter.Interpreter
             else
             {
                 _textOutputDevice.ClearScreen();
+            }
+        }
+
+        private void Dim(Statement.DimStatement statement)
+        {
+            object capacityObj = Evaluate(statement.Capacity);
+
+            if (!(capacityObj is double))
+            {
+                throw new RuntimeException("Array capacity must be a number.", statement.Name);
+            }
+
+            double capacity = (double)capacityObj;
+
+            if (_variables.ContainsKey(statement.Name.Lexeme.ToUpper()))
+            {
+                _variables.Remove(statement.Name.Lexeme.ToUpper());
+            }
+
+            if (statement.Name.Lexeme.EndsWith("$"))
+            {
+                var r = new string[(int)capacity + 1];
+                for (int x = 0; x < capacity + 1; x++)
+                {
+                    r[x] = "";
+                }
+                _variables.Add(statement.Name.Lexeme.ToUpper(), r);
+            }
+            else
+            {
+                var r = new double[(int)capacity + 1];
+                for (int x = 0; x < capacity + 1; x++)
+                {
+                    r[x] = 0;
+                }
+                _variables.Add(statement.Name.Lexeme.ToUpper(), r);
             }
         }
 
@@ -239,6 +281,45 @@ namespace Basice.Interpreter.Interpreter
             }
         }
 
+        private void DefineArrayVariable(Statement.VariableArrayStatement statement)
+        {
+            var init = Evaluate(statement.Initializer);
+            var indexObj = Evaluate(statement.Index);
+
+            if (!(indexObj is double))
+            {
+                throw new RuntimeException("Array indices must be numeric.", statement.Name);
+            }
+
+            int index = (int)(double)indexObj;
+
+            if (!_variables.ContainsKey(statement.Name.Lexeme.ToUpper()))
+            {
+                throw new RuntimeException("You must use 'DIM' to create an array before accessing it.",
+                    statement.Name);
+            }
+
+            object arrayObj = _variables[statement.Name.Lexeme.ToUpper()];
+            if (statement.Name.Lexeme.EndsWith("$"))
+            {
+                string[] obj = (string[])arrayObj;
+                if (obj.Length < index)
+                {
+                    throw new RuntimeException("Index outside of array bounds.", statement.Name);
+                }
+                obj[index] = (string)init;
+            }
+            else
+            {
+                double[] obj = (double[])arrayObj;
+                if (obj.Length < index)
+                {
+                    throw new RuntimeException("Index outside of array bounds.", statement.Name);
+                }
+                obj[index] = (double)init;
+            }
+        }
+
         private void DefineVariable(Statement.VariableStatement statement)
         {
             var init = Evaluate(statement.Initializer);
@@ -343,9 +424,17 @@ namespace Basice.Interpreter.Interpreter
                 arguments.Add(Evaluate(argument));
             }
 
-            if (!(callee is ICallable))
+            if (!(callee is ICallable) && !(callee is double[]) && !(callee is string[]))
             {
                 throw new RuntimeException("You can only call functions.", expression.Paren);
+            }
+
+            if (callee is double[])
+            {
+                return ((double[])callee)[(int)(double)arguments[0]];
+            } else if (callee is string[])
+            {
+                return ((string[])callee)[(int)(double)arguments[0]];
             }
 
             var function = (ICallable)callee;

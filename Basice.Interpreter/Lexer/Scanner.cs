@@ -25,6 +25,7 @@ namespace Basice.Interpreter.Lexer
 
             _keywords.Add("AND", TokenType.And);
             _keywords.Add("CLS", TokenType.Cls);
+            _keywords.Add("DIM", TokenType.Dim);
             _keywords.Add("ELSE", TokenType.Else);
             _keywords.Add("END", TokenType.End);
             _keywords.Add("FOR", TokenType.For);

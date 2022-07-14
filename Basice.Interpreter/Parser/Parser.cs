@@ -111,6 +111,30 @@ namespace Basice.Interpreter.Parser
 
         private Statement Declaration()
         {
+            if (Peek().Type == TokenType.Identifier && PeekNext().Type == TokenType.LeftParenthesis)
+            {
+                Token token = Peek();
+                Advance();
+                Advance();
+                Expression indexExpression = Expression();
+
+                if (!Match(TokenType.RightParenthesis))
+                {
+                    throw new ParserException(Error("Expected ')' after array index", Peek()));
+                }
+
+                if (Peek().Type == TokenType.Equal)
+                {
+                    Advance();
+                    Expression expression = Expression();
+
+                    return new Statement.VariableArrayStatement(token, indexExpression, expression,
+                        _currentBasicLineNumber);
+                }
+
+                return Statement();
+            }
+
             if (Match(TokenType.Identifier) && Peek().Type == TokenType.Equal)
             {
                 Token token = Previous();
@@ -126,6 +150,7 @@ namespace Basice.Interpreter.Parser
         private Statement Statement()
         {
             if (Match(TokenType.Cls)) return ClsStatement();
+            if (Match(TokenType.Dim)) return DimStatement();
             if (Match(TokenType.End)) return EndStatement();
             if (Match(TokenType.For)) return ForStatement();
             if (Match(TokenType.Goto)) return GotoStatement();
@@ -316,6 +341,30 @@ namespace Basice.Interpreter.Parser
             return new Statement.ClsStatement(_currentBasicLineNumber);
         }
 
+        private Statement DimStatement()
+        {
+            if (!Match(TokenType.Identifier))
+            {
+                throw new ParserException(Error("Expected identifier after 'DIM' statement.", Peek()));
+            }
+
+            Token identifier = Previous();
+
+            if (!Match(TokenType.LeftParenthesis))
+            {
+                throw new ParserException(Error("Expected '(' after identifier.", Peek()));
+            }
+
+            Expression capacity = Expression();
+
+            if (!Match(TokenType.RightParenthesis))
+            {
+                throw new ParserException(Error("Expected ')' after 'DIM' capacity.", Peek()));
+            }
+
+            return new Statement.DimStatement(identifier, capacity, _currentBasicLineNumber);
+        }
+
         private Statement EndStatement()
         {
             return new Statement.EndStatement(_currentBasicLineNumber);
@@ -490,6 +539,12 @@ namespace Basice.Interpreter.Parser
         private Token Peek()
         {
             return _tokens[_current];
+        }
+
+        private Token PeekNext()
+        {
+            if (_tokens.Count > _current + 1) return _tokens[_current + 1];
+            else return null;
         }
 
         private Token Previous()

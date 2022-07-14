@@ -5,6 +5,18 @@ namespace Basice.Interpreter.Parser
 {
     public abstract class Expression
     {
+        public class ArrayVariable : Expression
+        {
+            public Token Name { get; }
+            public Expression Capacity { get; }
+
+            public ArrayVariable(Token name, Expression capacity)
+            {
+                Name = name;
+                Capacity = capacity;
+            }
+        }
+
         public class Binary : Expression
         {
             public Expression Left { get; }
