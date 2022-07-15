@@ -9,6 +9,7 @@ namespace Basice.Interpreter.Interpreter
     public class Interpreter
     {
         private readonly List<Statement> _statements;
+        private readonly Stack<int> _gosubStack;
         private readonly ITextOutput _textOutputDevice;
         private readonly Dictionary<string, object> _variables;
         private readonly Dictionary<string, ICallable> _stdLib;
@@ -22,6 +23,7 @@ namespace Basice.Interpreter.Interpreter
             _currentStatementIndex = 0;
             _textOutputDevice = textOutputDevice;
             _variables = new Dictionary<string, object>();
+            _gosubStack = new Stack<int>();
             _stdLib = new Dictionary<string, ICallable>
             {
                 { "ABS", new Stdlib.Abs() },
@@ -70,6 +72,9 @@ namespace Basice.Interpreter.Interpreter
                 case nameof(Statement.ForStatement):
                     await ForAsync((Statement.ForStatement)statement);
                     break;
+                case nameof(Statement.GosubStatement):
+                    Gosub((Statement.GosubStatement)statement);
+                    break;
                 case nameof(Statement.GotoStatement):
                     Goto((Statement.GotoStatement)statement);
                     break;
@@ -81,6 +86,9 @@ namespace Basice.Interpreter.Interpreter
                     break;
                 case nameof(Statement.PrintStatement):
                     await Print((Statement.PrintStatement)statement);
+                    break;
+                case nameof(Statement.ReturnStatement):
+                    Return((Statement.ReturnStatement)statement);
                     break;
                 case nameof(Statement.VariableArrayStatement):
                     DefineArrayVariable((Statement.VariableArrayStatement)statement);
@@ -262,6 +270,22 @@ namespace Basice.Interpreter.Interpreter
             
         }
 
+        private void Gosub(Statement.GosubStatement statement)
+        {
+            _gosubStack.Push(_currentStatementIndex);
+
+            foreach (Statement s in _statements)
+            {
+                if (s.BasicLineNumber == statement.LineNumber)
+                {
+                    _currentStatementIndex = _statements.IndexOf(s) - 1;
+                    return;
+                }
+            }
+
+            throw new RuntimeException($"No such line number [{statement.LineNumber}].", statement.BasicLineNumber);
+        }
+
         private void Goto(Statement.GotoStatement statement)
         {
             foreach (Statement s in _statements)
@@ -323,6 +347,16 @@ namespace Basice.Interpreter.Interpreter
             {
                 _textOutputDevice.Print(value + crlf, _textOutputDevice.GetCursorPosition().Y, _textOutputDevice.GetCursorPosition().X);
             }
+        }
+
+        private void Return(Statement.ReturnStatement statement)
+        {
+            if (_gosubStack.Count == 0)
+            {
+                throw new RuntimeException("RETURN without GOSUB encountered.", statement.BasicLineNumber);
+            }
+
+            _currentStatementIndex = _gosubStack.Pop();
         }
 
         private void DefineArrayVariable(Statement.VariableArrayStatement statement)

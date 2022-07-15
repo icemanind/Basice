@@ -166,11 +166,13 @@ namespace Basice.Interpreter.Parser
             if (Match(TokenType.Dim)) return DimStatement();
             if (Match(TokenType.End)) return EndStatement();
             if (Match(TokenType.For)) return ForStatement();
+            if (Match(TokenType.Gosub)) return GosubStatement();
             if (Match(TokenType.Goto)) return GotoStatement();
             if (Match(TokenType.If)) return IfStatement();
             if (Match(TokenType.Locate)) return LocateStatement();
             if (Match(TokenType.Next)) return NextStatement();
             if (Match(TokenType.Print)) return PrintStatement();
+            if (Match(TokenType.Return)) return ReturnStatement();
 
             throw new ParserException(Error($"Unrecognized statement '{_tokens[_current].Lexeme}'", Previous()));
         }
@@ -434,6 +436,16 @@ namespace Basice.Interpreter.Parser
             return statement;
         }
 
+        private Statement GosubStatement()
+        {
+            if (!Match(TokenType.Number))
+            {
+                throw new ParserException(Error("Expected number after GOSUB", Peek()));
+            }
+
+            return new Statement.GosubStatement((int)(double)Previous().Literal, _currentBasicLineNumber);
+        }
+
         private Statement GotoStatement()
         {
             if (!Match(TokenType.Number))
@@ -521,6 +533,11 @@ namespace Basice.Interpreter.Parser
                 return new Statement.PrintStatement(value, false, _currentBasicLineNumber);
             }
             return new Statement.PrintStatement(value, true, _currentBasicLineNumber);
+        }
+
+        private Statement ReturnStatement()
+        {
+            return new Statement.ReturnStatement(_currentBasicLineNumber);
         }
 
         #endregion

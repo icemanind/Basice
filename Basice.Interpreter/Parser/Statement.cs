@@ -64,6 +64,17 @@ namespace Basice.Interpreter.Parser
             }
         }
 
+        public class GosubStatement : Statement
+        {
+            public int LineNumber { get; }
+
+            public GosubStatement(int lineNumber, int basicLineNumber)
+            {
+                BasicLineNumber = basicLineNumber;
+                LineNumber = lineNumber;
+            }
+        }
+
         public class GotoStatement : Statement
         {
             public int LineNumber { get; }
@@ -142,6 +153,14 @@ namespace Basice.Interpreter.Parser
                 BasicLineNumber = basicLineNumber;
                 Expression = expression;
                 AddCrLf = addCrLf;
+            }
+        }
+
+        public class ReturnStatement : Statement
+        {
+            public ReturnStatement(int basicLineNumber)
+            {
+                BasicLineNumber = basicLineNumber;
             }
         }
 
