@@ -63,6 +63,9 @@ namespace Basice.Interpreter.Interpreter
                 case nameof(Statement.ClsStatement):
                     await ClsAsync();
                     break;
+                case nameof(Statement.CursorStatement):
+                    await CursorAsync((Statement.CursorStatement)statement);
+                    break;
                 case nameof(Statement.DimStatement):
                     Dim((Statement.DimStatement)statement);
                     break;
@@ -119,6 +122,32 @@ namespace Basice.Interpreter.Interpreter
             else
             {
                 _textOutputDevice.ClearScreen();
+            }
+        }
+
+        private async Task CursorAsync(Statement.CursorStatement statement)
+        {
+            if (_textOutputDevice.AsyncAvailable)
+            {
+                if (statement.CursorOn)
+                {
+                    await _textOutputDevice.SetCursorOnAsync();
+                }
+                else
+                {
+                    await _textOutputDevice.SetCursorOffAsync();
+                }
+            }
+            else
+            {
+                if (statement.CursorOn)
+                {
+                    _textOutputDevice.SetCursorOn();
+                }
+                else
+                {
+                    _textOutputDevice.SetCursorOff();
+                }
             }
         }
 

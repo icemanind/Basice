@@ -163,6 +163,7 @@ namespace Basice.Interpreter.Parser
         private Statement Statement()
         {
             if (Match(TokenType.Cls)) return ClsStatement();
+            if (Match(TokenType.Cursor)) return CursorStatement();
             if (Match(TokenType.Dim)) return DimStatement();
             if (Match(TokenType.End)) return EndStatement();
             if (Match(TokenType.For)) return ForStatement();
@@ -354,6 +355,19 @@ namespace Basice.Interpreter.Parser
         private Statement ClsStatement()
         {
             return new Statement.ClsStatement(_currentBasicLineNumber);
+        }
+
+        private Statement CursorStatement()
+        {
+            if (Match(TokenType.On))
+            {
+                return new Statement.CursorStatement(true, _currentBasicLineNumber);
+            } else if (Match(TokenType.Off))
+            {
+                return new Statement.CursorStatement(false, _currentBasicLineNumber);
+            }
+
+            throw new ParserException(Error("Expected 'OFF' or 'ON' following 'CURSOR' statement.", Previous()));
         }
 
         private Statement DimStatement()

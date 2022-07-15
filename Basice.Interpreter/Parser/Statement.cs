@@ -26,6 +26,17 @@ namespace Basice.Interpreter.Parser
             }
         }
 
+        public class CursorStatement : Statement
+        {
+            public bool CursorOn { get; set; }
+
+            public CursorStatement(bool cursorOn, int basicLineNumber)
+            {
+                BasicLineNumber = basicLineNumber;
+                CursorOn = cursorOn;
+            }
+        }
+
         public class DimStatement : Statement
         {
             public Token Name { get; }
@@ -98,19 +109,6 @@ namespace Basice.Interpreter.Parser
                 Condition = condition;
                 ThenBranch = thenBranch;
                 ElseBranch = elseBranch;
-            }
-        }
-
-        public class IncrementStatement : Statement
-        {
-            public Token Token { get; }
-            public Expression Value { get; }
-
-            public IncrementStatement(Token token, Expression value, int basicLineNumber)
-            {
-                BasicLineNumber=basicLineNumber;
-                Token = token;
-                Value = value;
             }
         }
 

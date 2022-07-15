@@ -19,6 +19,10 @@ namespace Basice.Interpreter.Interpreter
         Task PrintAsync(string text, int locationY, int locationX);
         Task PrintAsync(string text, int locationY, int locationX, int foregroundColor, int backgroundColor);
         void SetBackgroundColor(int color);
+        Task SetCursorOffAsync();
+        void SetCursorOff();
+        Task SetCursorOnAsync();
+        void SetCursorOn();
         void SetCursorPosition(int y, int x);
         void SetForegroundColor(int color);
     }

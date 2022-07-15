@@ -111,6 +111,28 @@ namespace Basice.UI
             _backgroundColor = color;
         }
 
+        public Task SetCursorOffAsync()
+        {
+            _control.ShowCursor = false;
+            return Task.CompletedTask;
+        }
+
+        public void SetCursorOff()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetCursorOnAsync()
+        {
+            _control.ShowCursor = true;
+            return Task.CompletedTask;
+        }
+
+        public void SetCursorOn()
+        {
+            throw new NotImplementedException();
+        }
+
         public void SetCursorPosition(int y, int x)
         {
             _cursorX = x;
