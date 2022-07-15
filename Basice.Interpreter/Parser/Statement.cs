@@ -29,13 +29,13 @@ namespace Basice.Interpreter.Parser
         public class DimStatement : Statement
         {
             public Token Name { get; }
-            public Expression Capacity { get; }
+            public List<Expression> Capacities { get; }
 
-            public DimStatement(Token name, Expression capacity, int basicLineNumber)
+            public DimStatement(Token name, List<Expression> capacities, int basicLineNumber)
             {
                 BasicLineNumber = basicLineNumber;
                 Name = name;
-                Capacity = capacity;
+                Capacities = capacities;
             }
         }
 
@@ -149,12 +149,12 @@ namespace Basice.Interpreter.Parser
         {
             public Token Name { get; }
             public Expression Initializer { get; }
-            public Expression Index { get; }
+            public List<Expression> Indices { get; }
 
-            public VariableArrayStatement(Token name, Expression index, Expression initializer, int basicLineNumber)
+            public VariableArrayStatement(Token name, List<Expression> indices, Expression initializer, int basicLineNumber)
             {
                 Name = name;
-                Index = index;
+                Indices = indices;
                 Initializer = initializer;
                 BasicLineNumber = basicLineNumber;
             }

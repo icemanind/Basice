@@ -113,14 +113,27 @@ namespace Basice.Interpreter.Parser
         {
             if (Peek().Type == TokenType.Identifier && PeekNext().Type == TokenType.LeftParenthesis)
             {
+                var indices = new List<Expression>();
                 Token token = Peek();
                 Advance();
                 Advance();
-                Expression indexExpression = Expression();
+
+                do
+                {
+                    Expression indexExpression = Expression();
+                    indices.Add(indexExpression);
+                    if (Peek().Type != TokenType.Comma) break;
+                    Advance();
+                } while (true);
 
                 if (!Match(TokenType.RightParenthesis))
                 {
                     throw new ParserException(Error("Expected ')' after array index", Peek()));
+                }
+
+                if (Previous().Type == TokenType.Comma)
+                {
+
                 }
 
                 if (Peek().Type == TokenType.Equal)
@@ -128,7 +141,7 @@ namespace Basice.Interpreter.Parser
                     Advance();
                     Expression expression = Expression();
 
-                    return new Statement.VariableArrayStatement(token, indexExpression, expression,
+                    return new Statement.VariableArrayStatement(token, indices, expression,
                         _currentBasicLineNumber);
                 }
 
@@ -343,6 +356,8 @@ namespace Basice.Interpreter.Parser
 
         private Statement DimStatement()
         {
+            var capacities = new List<Expression>();
+
             if (!Match(TokenType.Identifier))
             {
                 throw new ParserException(Error("Expected identifier after 'DIM' statement.", Peek()));
@@ -355,14 +370,22 @@ namespace Basice.Interpreter.Parser
                 throw new ParserException(Error("Expected '(' after identifier.", Peek()));
             }
 
-            Expression capacity = Expression();
+            do
+            {
+                Expression capacity = Expression();
+                capacities.Add(capacity);
+                if (!Match(TokenType.Comma))
+                {
+                    break;
+                }
+            } while (true);
 
             if (!Match(TokenType.RightParenthesis))
             {
                 throw new ParserException(Error("Expected ')' after 'DIM' capacity.", Peek()));
             }
 
-            return new Statement.DimStatement(identifier, capacity, _currentBasicLineNumber);
+            return new Statement.DimStatement(identifier, capacities, _currentBasicLineNumber);
         }
 
         private Statement EndStatement()
