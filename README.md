@@ -54,6 +54,13 @@ Basice can concatenate strings using the plus `+` operator:
 
 This prints `HELLO WORLD!!!` to the console.
 
+By default, after a `PRINT` command is issued, the cursor moves down to the next line. You can suppress this by adding a semicolon after the `PRINT` statement, like this:
+
+    10 PRINT "HELLO ";
+    20 PRINT "WORLD!!!";
+
+This will print `HELLO WORLD!!!` all on one line.
+
 Basice supports variables and there are two types of variables. String variables and number variables. String variables must end with a dollar sign `$` :
 
     10 PI=3.14
@@ -62,6 +69,80 @@ Basice supports variables and there are two types of variables. String variables
     40 PRINT PI
 
 This program will print `I love Pie!` to the console and then print the value `3.14` to the console. If you use a string variable without initializing it, it defaults to an empty string `""`. If you use a number variable without initializing it, it defaults to a zero `0`. 
+
+Basice supports one and two dimensional arrays. You can create a one dimensional string array or number array like this:
+
+    10 DIM A$(10)
+    20 A$(2) = "Test"
+    30 PRINT A$(2)
+    
+This will print `TEST` to the console. Before you can use arrays, you must use the `DIM` statement to allocate the number of elements your array is going to use. In the example above, `10` elements are allocated and can be access with an index selector of 1-10. For compatibility purposes, you can also use an index selector of `0`. Here is an example of a two dimensional array:
+
+    10 DIM A(3,4)
+    20 A(2,1) = 15
+    30 PRINT A(2,1)
+    
+This will print `15` to the console. 
+
+Basice also support the `FOR/NEXT/STEP` loop. Here is an example:
+
+    10 CLS
+    20 FOR X=1 TO 10
+    30 PRINT X
+    40 NEXT X
+    
+This will print the numbers `1-10` to the console. Anything between the `FOR` and the `NEXT` statements will be repeated for `X` number of iterations. By default, index iterators will increment by `1`. If you wanted to increment by a different amount, you can use the `STEP` keyword. Here is a program to print only even numbers to the console.
+
+    10 CLS
+    20 FOR X=2 to 10 STEP 2
+    30 PRINT X
+    40 NEXT X
+    
+This starts the count at `2` and for each iteration, increments by 2. You can also count backwards. To print even numbers between 1 and 10 in reverse order:
+
+    10 CLS
+    20 FOR X=10 TO 2 STEP -2
+    30 PRINT X
+    40 NEXT X
+    
+Basice also supports `IF/THEN/ELSE`. You can use the `IF` statement to test if a condition is true, then do something based on that condition being true. `ELSE` can be used to do something if the condition is false. All `IF` statements must be on one line since there is no statement to end an `IF` statement. Here is an example:
+
+    10 CLS
+    20 FOR X=1 TO 10
+    30 IF X=3 THEN PRINT "--> ";
+    40 PRINT X
+    50 NEXT X
+    
+This program prints this output:
+
+    1
+    2
+    --> 3
+    4
+    5
+    6
+    7
+    8
+    9
+    10
+    
+Notice when `X=3` then it prints the arrow before the number. If you wanted to print left arrows for all numbers except `3` and a right arrow for `3`, you can use `ELSE`:
+
+    10 CLS
+    20 FOR X=1 TO 10
+    30 IF X=3 THEN PRINT "--> "; ELSE PRINT "<-- ";
+    40 PRINT X
+    50 NEXT X
+    
+Another useful statement is the `END` statement. This command simply ends the program. Here is an example:
+
+    10 CLS
+    20 FOR X=1 TO 10
+    30 IF X=8 THEN END
+    40 PRINT X
+    50 NEXT X
+    
+This will print the numbers `1-7`, but the program ends after the 8th iteration. 
 
 ## Author
 

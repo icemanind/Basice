@@ -13,11 +13,11 @@ namespace Basice.Interpreter.Interpreter
         private readonly Dictionary<string, object> _variables;
         private readonly Dictionary<string, ICallable> _stdLib;
         private int _currentStatementIndex;
-        private readonly Stack<Statement.ForStatement> _forStack;
+        private bool _endHit;
 
         public Interpreter(List<Statement> statements, ITextOutput textOutputDevice)
         {
-            _forStack = new Stack<Statement.ForStatement>();
+            _endHit = false;
             _statements = statements;
             _currentStatementIndex = 0;
             _textOutputDevice = textOutputDevice;
@@ -42,8 +42,10 @@ namespace Basice.Interpreter.Interpreter
 
         public async Task InterpretAsync()
         {
+            _endHit = false;
             while (_currentStatementIndex < _statements.Count)
             {
+                if (_endHit) break;
                 await ExecuteAsync(_statements[_currentStatementIndex]);
                 _currentStatementIndex++;
             }
@@ -96,6 +98,7 @@ namespace Basice.Interpreter.Interpreter
             foreach (Statement statement in statements.Statements)
             {
                 await ExecuteAsync(statement);
+                if (_endHit) break;
             }
         }
 
@@ -188,6 +191,7 @@ namespace Basice.Interpreter.Interpreter
         private void End()
         {
             _currentStatementIndex = _statements.Count;
+            _endHit = true;
         }
 
         private async Task ForAsync(Statement.ForStatement statement)
@@ -226,6 +230,7 @@ namespace Basice.Interpreter.Interpreter
                 while ((double)_variables[statement.Variable.Lexeme.ToUpper()] >= dblEnd)
                 {
                     await ExecuteAsync(_statements[_currentStatementIndex]);
+                    if (_endHit) break;
                     _currentStatementIndex++;
 
                     if (_statements[_currentStatementIndex] is Statement.NextStatement)
@@ -242,6 +247,7 @@ namespace Basice.Interpreter.Interpreter
                 while ((double)_variables[statement.Variable.Lexeme.ToUpper()] <= dblEnd)
                 {
                     await ExecuteAsync(_statements[_currentStatementIndex]);
+                    if (_endHit) break;
                     _currentStatementIndex++;
 
                     if (_statements[_currentStatementIndex] is Statement.NextStatement)
