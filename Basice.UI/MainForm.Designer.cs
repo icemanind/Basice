@@ -44,7 +44,7 @@
             this.txtProgram.Multiline = true;
             this.txtProgram.Name = "txtProgram";
             this.txtProgram.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtProgram.Size = new System.Drawing.Size(871, 377);
+            this.txtProgram.Size = new System.Drawing.Size(871, 562);
             this.txtProgram.TabIndex = 0;
             this.txtProgram.WordWrap = false;
             // 
@@ -87,7 +87,7 @@
             // 
             // BtnRunProgram
             // 
-            this.BtnRunProgram.Location = new System.Drawing.Point(20, 424);
+            this.BtnRunProgram.Location = new System.Drawing.Point(20, 609);
             this.BtnRunProgram.Name = "BtnRunProgram";
             this.BtnRunProgram.Size = new System.Drawing.Size(413, 36);
             this.BtnRunProgram.TabIndex = 4;
@@ -99,7 +99,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1571, 474);
+            this.ClientSize = new System.Drawing.Size(1571, 689);
             this.Controls.Add(this.BtnRunProgram);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.consoleProgram);

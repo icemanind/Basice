@@ -11,17 +11,22 @@ namespace Basice.Interpreter.Interpreter
         private readonly List<Statement> _statements;
         private readonly Stack<int> _gosubStack;
         private readonly ITextOutput _textOutputDevice;
+        private readonly ITextInput _textInputDevice;
         private readonly Dictionary<string, object> _variables;
         private readonly Dictionary<string, ICallable> _stdLib;
         private int _currentStatementIndex;
         private bool _endHit;
 
-        public Interpreter(List<Statement> statements, ITextOutput textOutputDevice)
+        public ITextOutput TextOutputDevice => _textOutputDevice;
+        public ITextInput TextInputDevice => _textInputDevice;
+
+        public Interpreter(List<Statement> statements, ITextOutput textOutputDevice, ITextInput textInputDevice)
         {
             _endHit = false;
             _statements = statements;
             _currentStatementIndex = 0;
             _textOutputDevice = textOutputDevice;
+            _textInputDevice = textInputDevice;
             _variables = new Dictionary<string, object>();
             _gosubStack = new Stack<int>();
             _stdLib = new Dictionary<string, ICallable>
@@ -30,6 +35,7 @@ namespace Basice.Interpreter.Interpreter
                 { "ASC", new Stdlib.Asc() },
                 { "CHR$", new Stdlib.Chr() },
                 { "HEX$", new Stdlib.Hex() },
+                { "INKEY$", new Stdlib.Inkey() },
                 { "INT", new Stdlib.Int() },
                 { "LEFT$", new Stdlib.Left() },
                 { "LEN", new Stdlib.Len() },
@@ -45,10 +51,12 @@ namespace Basice.Interpreter.Interpreter
         public async Task InterpretAsync()
         {
             _endHit = false;
+            _textInputDevice.ClearBuffer();
             while (_currentStatementIndex < _statements.Count)
             {
                 if (_endHit) break;
                 await ExecuteAsync(_statements[_currentStatementIndex]);
+                await Task.Delay(1);
                 _currentStatementIndex++;
             }
         }
@@ -85,7 +93,7 @@ namespace Basice.Interpreter.Interpreter
                     await IfAsync((Statement.IfStatement)statement);
                     break;
                 case nameof(Statement.LocateStatement):
-                    Locate((Statement.LocateStatement)statement);
+                    await LocateAsync((Statement.LocateStatement)statement);
                     break;
                 case nameof(Statement.PrintStatement):
                     await Print((Statement.PrintStatement)statement);
@@ -350,7 +358,7 @@ namespace Basice.Interpreter.Interpreter
             return;
         }
 
-        private async Task Locate(Statement.LocateStatement statement)
+        private async Task LocateAsync(Statement.LocateStatement statement)
         {
             object yObj = Evaluate(statement.Y);
             object xObj = Evaluate(statement.X);

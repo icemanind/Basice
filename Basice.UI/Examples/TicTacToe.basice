@@ -1,0 +1,89 @@
+﻿10 CLS
+20 DIM B$(9):TURN = 1
+30 FOR X=1 TO 9:B$(X) = STR$(X) : Next
+40 GOSUB 1000
+50 GOSUB 3000
+60 K$=INKEY$():IF K$=CHR$(0) THEN GOTO 60
+70 K = ASC(K$)
+80 IF K < ASC("1") OR K > ASC("9") THEN GOTO 60
+90 B = VAL(K$)
+100 IF ASC(B$(B)) >= ASC("1") AND ASC(B$(B)) <= ASC("9") THEN GOTO 120
+110 GOSUB 3050: GOTO 60
+120 IF TURN = 1 THEN B$(B) = "X" ELSE B$(B) = "O"
+130 IF TURN = 1 THEN TURN = 0 ELSE TURN = 1
+140 GOSUB 4000
+150 CLS: GOTO 40
+888 PRINT"END":END
+1000 ' Draw Tic-Tac-Toe board
+1009 CURSOR OFF
+1010 FOR Y=5 TO 9 STEP 2
+1020 LOCATE Y,10
+1030 PRINT "|"
+1040 LOCATE Y,12
+1050 PRINT "|"
+1060 NEXT
+1070 FOR X=9 TO 13
+1080 LOCATE 6,X
+1090 PRINT "-"
+1100 LOCATE 8,X
+1110 PRINT "-"
+1120 NEXT
+1130 GOSUB 2000
+1140 CURSOR ON:Return
+2000 ' Draw X's and O's
+2010 FOR X=1 TO 3
+2020 LOCATE 5,X * 2 + 7
+2030 PRINT B$(X)
+2040 NEXT
+2050 FOR X=4 TO 6
+2060 LOCATE 7,X*2 + 1
+2070 PRINT B$(X)
+2080 NEXT
+2090 FOR X=7 TO 9
+2100 LOCATE 9,X*2 - 5
+2110 PRINT B$(X)
+2120 NEXT
+3000 ' Draw prompt
+3010 LOCATE 11,3
+3020 IF TURN=1 THEN PRINT "It's X's"; ELSE PRINT "It's O's";
+3030 PRINT " turn. Press a number to claim that space!           "
+3040 RETURN
+3050 ' Draw occupied prompt
+3060 LOCATE 11,3
+3070 PRINT "That space is already occupied! Try another space!          "
+3080 RETURN
+4000 ' Check for a win
+4010 W = 0: W$="X": GOSUB 4500
+4020 IF W = 1 THEN GOTO 4630
+4030 W = 0: W$="O": GOSUB 4500
+4040 IF W = 2 THEN GOTO 4630
+4050 GOSUB 4400
+4060 RETURN
+4400 ' Check for cat's game
+4410 IF B$(1)<>"1" AND B$(2)<>"2" AND B$(3)<>"3" AND B$(4)<>"4" AND B$(5)<>"5" AND B$(6)<>"6" AND B$(7)<>"7" AND B$(8)<>"8" AND B$(9)<>"9" THEN GOTO 4430
+4420 RETURN
+4430 CLS
+4440 GOSUB 1000:LOCATE 11,3
+4450 PRINT "It's a draw!                                                                 "
+4460 GOTO 4680
+4500 ' Check for win
+4510 ' Check for 3 horizontally
+4520 IF B$(1) = W$ AND B$(2) = W$ AND B$(3) = W$ THEN W=1:RETURN
+4530 IF B$(4) = W$ AND B$(5) = W$ AND B$(6) = W$ THEN W=1:RETURN
+4540 IF B$(7) = W$ AND B$(8) = W$ AND B$(9) = W$ THEN W=1:RETURN
+4550 ' Check for 3 vertically
+4560 IF B$(1) = W$ AND B$(4) = W$ AND B$(7) = W$ THEN W=1:RETURN
+4570 IF B$(2) = W$ AND B$(5) = W$ AND B$(8) = W$ THEN W=1:RETURN
+4580 IF B$(3) = W$ AND B$(6) = W$ AND B$(9) = W$ THEN W=1:RETURN
+4590 ' Check for 3 diagnally
+4600 IF B$(1) = W$ AND B$(5) = W$ AND B$(9) = W$ THEN W=1:RETURN
+4610 IF B$(3) = W$ AND B$(5) = W$ AND B$(7) = W$ THEN W=1:RETURN
+4620 W = 0: RETURN
+4630 ' A Win!
+4640 CLS
+4650 GOSUB 1000
+4660 LOCATE 11,3
+4670 PRINT W$ + " wins the game!                                                           "
+4680 LOCATE 12,3
+4690 PRINT "Game Over!"
+4700 END

@@ -31,6 +31,8 @@ namespace Basice.UI
 
         private readonly TextBlock[] _textBlockArray;
 
+        public bool ProcessKeys { get; set; }
+
         /// <summary>
         /// Gets or Sets a value indicating whether the console should show the cursor
         /// </summary>
@@ -114,6 +116,7 @@ namespace Basice.UI
             ShowCursor = true;
             AllowInput = true;
             EchoInput = true;
+            ProcessKeys = true;
 
             _textBlockArray = new TextBlock[ScreenSize]; // 80 x 25
 
@@ -140,6 +143,7 @@ namespace Basice.UI
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
+            if (!ProcessKeys) return base.ProcessCmdKey(ref msg, keyData); 
             if (keyData == Keys.Up)
             {
                 if (_commandBufferIndex <= 0 || (!AllowInput))
@@ -191,7 +195,7 @@ namespace Basice.UI
 
         private void ConsoleControlKeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!AllowInput)
+            if (!AllowInput || !ProcessKeys)
             {
                 return;
             }

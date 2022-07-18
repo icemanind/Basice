@@ -47,11 +47,13 @@
     <Compile Include="Interpreter\CursorLocation.cs" />
     <Compile Include="Interpreter\ICallable.cs" />
     <Compile Include="Interpreter\Interpreter.cs" />
+    <Compile Include="Interpreter\ITextInput.cs" />
     <Compile Include="Interpreter\ITextOutput.cs" />
     <Compile Include="Interpreter\Stdlib\Abs.cs" />
     <Compile Include="Interpreter\Stdlib\Asc.cs" />
     <Compile Include="Interpreter\Stdlib\Chr.cs" />
     <Compile Include="Interpreter\Stdlib\Hex.cs" />
+    <Compile Include="Interpreter\Stdlib\Inkey.cs" />
     <Compile Include="Interpreter\Stdlib\Int.cs" />
     <Compile Include="Interpreter\Stdlib\Left.cs" />
     <Compile Include="Interpreter\Stdlib\Len.cs" />

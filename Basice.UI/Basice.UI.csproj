@@ -53,6 +53,7 @@
     <Compile Include="ConsoleControl.Designer.cs">
       <DependentUpon>ConsoleControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="ConsoleControlInputDevice.cs" />
     <Compile Include="ConsoleControlOutputDevice.cs" />
     <Compile Include="CursorTypes.cs" />
     <Compile Include="Location.cs" />
@@ -98,7 +99,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <EmbeddedResource Include="Examples\TicTacToe.bas" />
+    <EmbeddedResource Include="Examples\TicTacToe.basice" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

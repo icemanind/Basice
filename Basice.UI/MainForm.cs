@@ -31,7 +31,8 @@ namespace Basice.UI
             List<Statement> statements = parser.Parse();
 
             var outputDevice = new ConsoleControlOutputDevice(consoleProgram);
-            var interpreter = new Interpreter.Interpreter.Interpreter(statements, outputDevice);
+            var inputDevice = new ConsoleControlInputDevice(consoleProgram);
+            var interpreter = new Interpreter.Interpreter.Interpreter(statements, outputDevice, inputDevice);
 
             await interpreter.InterpretAsync();
         }
