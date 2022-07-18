@@ -24,6 +24,7 @@ namespace Basice.Interpreter.Interpreter
         Task SetCursorOnAsync();
         void SetCursorOn();
         void SetCursorPosition(int y, int x);
+        Task SetCursorPositionAsync(int y, int x);
         void SetForegroundColor(int color);
     }
 }

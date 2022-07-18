@@ -266,9 +266,13 @@ namespace Basice.Interpreter.Interpreter
             {
                 while ((double)_variables[statement.Variable.Lexeme.ToUpper()] >= dblEnd)
                 {
-                    await ExecuteAsync(_statements[_currentStatementIndex]);
+                    if (!(_statements[_currentStatementIndex] is Statement.NextStatement))
+                    {
+                        await ExecuteAsync(_statements[_currentStatementIndex]);
+                        _currentStatementIndex++;
+                    }
+
                     if (_endHit) break;
-                    _currentStatementIndex++;
 
                     if (_statements[_currentStatementIndex] is Statement.NextStatement)
                     {
@@ -283,9 +287,13 @@ namespace Basice.Interpreter.Interpreter
             {
                 while ((double)_variables[statement.Variable.Lexeme.ToUpper()] <= dblEnd)
                 {
-                    await ExecuteAsync(_statements[_currentStatementIndex]);
+                    if (!(_statements[_currentStatementIndex] is Statement.NextStatement))
+                    {
+                        await ExecuteAsync(_statements[_currentStatementIndex]);
+                        _currentStatementIndex++;
+                    }
+
                     if (_endHit) break;
-                    _currentStatementIndex++;
 
                     if (_statements[_currentStatementIndex] is Statement.NextStatement)
                     {
@@ -342,7 +350,7 @@ namespace Basice.Interpreter.Interpreter
             return;
         }
 
-        private void Locate(Statement.LocateStatement statement)
+        private async Task Locate(Statement.LocateStatement statement)
         {
             object yObj = Evaluate(statement.Y);
             object xObj = Evaluate(statement.X);
@@ -357,9 +365,22 @@ namespace Basice.Interpreter.Interpreter
             }
             int y = (int)(double)yObj;
             int x = (int)(double)xObj;
+            if (y <= 0 || y > 24)
+            {
+                throw new RuntimeException("Y value must be a number between 1 and 24.", statement.BasicLineNumber);
+            }
+
+            if (x <= 0 || x > 80)
+            {
+                throw new RuntimeException("X value must be a number between 1 and 80.", statement.BasicLineNumber);
+            }
             if (_textOutputDevice.AsyncAvailable)
             {
-                _textOutputDevice.SetCursorPosition(y, x);
+                await _textOutputDevice.SetCursorPositionAsync(y - 1, x - 1);
+            }
+            else
+            {
+                _textOutputDevice.SetCursorPosition(y - 1, x - 1);
             }
         }
 

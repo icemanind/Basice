@@ -84,6 +84,30 @@ This will print `TEST` to the console. Before you can use arrays, you must use t
     
 This will print `15` to the console. 
 
+To clear the console, you can use the `CLS` statement. The `CLS` statement will clear the console and set the cursor position to `0`, `0`. To move the cursor position, you can use the `LOCATE` statement. The `LOCATE` statement will move the cursor to the given row and column. The console has 24 rows and 80 columns, so `Y` must be a number between 1 and 24 and `X` must be a number between 1 and 80. Here is an example:
+
+    10 CLS
+    20 ' Move the cursor to the 7th row down and 30 columns over.
+    30 LOCATE 7, 30
+    40 PRINT "HELLO WORLD!"
+    
+The cursor, by default, is a destructive cursor that will overwrite the character at the current position. Sometimes you may want to turn the cursor off so that it will not overwrite the character at the current position. You can do this by using the `CURSOR OFF` and `CURSOR ON` statements:
+
+    10 CLS
+    20 LOCATE 3,3
+    30 PRINT "HELLO"
+    40 LOCATE 3,3
+    
+Running the above program will print `HELLO` at cursor position `3, 3`. It will then reposition the cursor to `3, 3`, thus overwriting the `H` in `HELLO` (thus, printing `ELLO`). You can fix this by using the `CURSOR OFF` statement:
+
+    10 CLS
+    20 CURSOR OFF
+    30 LOCATE 3,3
+    40 PRINT "HELLO"
+    50 LOCATE 3,3
+
+Running the above program will print `HELLO` and still reposition the cursor to `3, 3`, but the `H` will not be overwritten. 
+
 Basice also support the `FOR/NEXT/STEP` loop. Here is an example:
 
     10 CLS

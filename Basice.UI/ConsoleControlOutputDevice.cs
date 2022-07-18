@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Basice.Interpreter.Interpreter;
 
@@ -137,6 +134,13 @@ namespace Basice.UI
         {
             _cursorX = x;
             _cursorY = y;
+        }
+
+        public async Task SetCursorPositionAsync(int y, int x)
+        {
+            _cursorX = x;
+            _cursorY = y;
+            await Task.Run(() => _control.SetCursorPosition(y,x));
         }
 
         public void SetForegroundColor(int color)
