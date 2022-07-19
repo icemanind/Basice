@@ -15,7 +15,7 @@
 
         // Statements
         And, Cls, Data, Dim, Cursor, Else, End, For, Gosub, Goto, If, Locate, Off, On, 
-        Or, Next, Not, Print, Read, Return, Step, Then, To,
+        Or, Next, Not, Print, Read, Restore, Return, Step, Then, To,
 
         // No Operation
         Nop,

@@ -42,6 +42,7 @@ namespace Basice.Interpreter.Lexer
             _keywords.Add("OR", TokenType.Or);
             _keywords.Add("PRINT", TokenType.Print);
             _keywords.Add("READ", TokenType.Read);
+            _keywords.Add("RESTORE", TokenType.Restore);
             _keywords.Add("RETURN", TokenType.Return);
             _keywords.Add("STEP", TokenType.Step);
             _keywords.Add("THEN", TokenType.Then);

@@ -188,6 +188,14 @@ namespace Basice.Interpreter.Parser
             }
         }
 
+        public class RestoreStatement : Statement
+        {
+            public RestoreStatement(int basicLineNumber)
+            {
+                BasicLineNumber = basicLineNumber;
+            }
+        }
+
         public class VariableArrayStatement : Statement
         {
             public Token Name { get; }

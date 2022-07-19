@@ -54,6 +54,7 @@ namespace Basice.Interpreter.Interpreter
 
         public async Task InterpretAsync()
         {
+            await _textOutputDevice.ClearScreenAsync();
             _endHit = false;
             _textInputDevice.ClearBuffer();
             ParseDataStatements();
@@ -129,6 +130,9 @@ namespace Basice.Interpreter.Interpreter
                     break;
                 case nameof(Statement.ReadStatement):
                     Read((Statement.ReadStatement)statement);
+                    break;
+                case nameof(Statement.RestoreStatement):
+                    Restore();
                     break;
                 case nameof(Statement.ReturnStatement):
                     Return((Statement.ReturnStatement)statement);
@@ -488,7 +492,13 @@ namespace Basice.Interpreter.Interpreter
 
                 DefineArrayVariable(vas);
             }
-            
+        }
+
+        private void Restore()
+        {
+            _numberData.Clear();
+            _stringData.Clear();
+            ParseDataStatements();
         }
 
         private void Return(Statement.ReturnStatement statement)

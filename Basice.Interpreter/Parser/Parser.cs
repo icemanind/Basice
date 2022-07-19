@@ -175,6 +175,7 @@ namespace Basice.Interpreter.Parser
             if (Match(TokenType.Next)) return NextStatement();
             if (Match(TokenType.Print)) return PrintStatement();
             if (Match(TokenType.Read)) return ReadStatement();
+            if (Match(TokenType.Restore)) return RestoreStatement();
             if (Match(TokenType.Return)) return ReturnStatement();
 
             throw new ParserException(Error($"Unrecognized statement '{_tokens[_current].Lexeme}'", Previous()));
@@ -602,6 +603,11 @@ namespace Basice.Interpreter.Parser
             }
 
             return new Statement.ReadStatement(identifier, false, null, _currentBasicLineNumber);
+        }
+
+        private Statement RestoreStatement()
+        {
+            return new Statement.RestoreStatement(_currentBasicLineNumber);
         }
 
         private Statement ReturnStatement()
