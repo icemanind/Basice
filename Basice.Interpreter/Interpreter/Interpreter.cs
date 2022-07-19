@@ -310,6 +310,7 @@ namespace Basice.Interpreter.Interpreter
             {
                 while ((double)_variables[statement.Variable.Lexeme.ToUpper()] >= dblEnd)
                 {
+                    if (_currentStatementIndex >= _statements.Count) break;
                     if (!(_statements[_currentStatementIndex] is Statement.NextStatement))
                     {
                         await ExecuteAsync(_statements[_currentStatementIndex]);
@@ -318,6 +319,7 @@ namespace Basice.Interpreter.Interpreter
 
                     if (_endHit) break;
 
+                    if (_currentStatementIndex >= _statements.Count) break;
                     if (_statements[_currentStatementIndex] is Statement.NextStatement)
                     {
                         currentNextIndex = _currentStatementIndex;
@@ -331,6 +333,7 @@ namespace Basice.Interpreter.Interpreter
             {
                 while ((double)_variables[statement.Variable.Lexeme.ToUpper()] <= dblEnd)
                 {
+                    if (_currentStatementIndex >= _statements.Count) break;
                     if (!(_statements[_currentStatementIndex] is Statement.NextStatement))
                     {
                         await ExecuteAsync(_statements[_currentStatementIndex]);
@@ -339,6 +342,7 @@ namespace Basice.Interpreter.Interpreter
 
                     if (_endHit) break;
 
+                    if (_currentStatementIndex >= _statements.Count) break;
                     if (_statements[_currentStatementIndex] is Statement.NextStatement)
                     {
                         currentNextIndex = _currentStatementIndex;
