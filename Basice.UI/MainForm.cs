@@ -36,5 +36,13 @@ namespace Basice.UI
 
             await interpreter.InterpretAsync();
         }
+
+        private void BtnLoadExample_Click(object sender, EventArgs e)
+        {
+            var examplesBrowser = new ExamplesBrowser();
+            examplesBrowser.ShowDialog(this);
+
+            if (examplesBrowser.Program != "") txtProgram.Text = examplesBrowser.Program;
+        }
     }
 }

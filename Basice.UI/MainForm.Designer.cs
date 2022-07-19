@@ -33,6 +33,7 @@
             this.consoleProgram = new Basice.UI.ConsoleControl();
             this.label2 = new System.Windows.Forms.Label();
             this.BtnRunProgram = new System.Windows.Forms.Button();
+            this.BtnLoadExample = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txtProgram
@@ -89,17 +90,28 @@
             // 
             this.BtnRunProgram.Location = new System.Drawing.Point(20, 609);
             this.BtnRunProgram.Name = "BtnRunProgram";
-            this.BtnRunProgram.Size = new System.Drawing.Size(413, 36);
+            this.BtnRunProgram.Size = new System.Drawing.Size(871, 36);
             this.BtnRunProgram.TabIndex = 4;
             this.BtnRunProgram.Text = "Run Program";
             this.BtnRunProgram.UseVisualStyleBackColor = true;
             this.BtnRunProgram.Click += new System.EventHandler(this.BtnRunProgram_Click);
             // 
+            // BtnLoadExample
+            // 
+            this.BtnLoadExample.Location = new System.Drawing.Point(20, 651);
+            this.BtnLoadExample.Name = "BtnLoadExample";
+            this.BtnLoadExample.Size = new System.Drawing.Size(871, 36);
+            this.BtnLoadExample.TabIndex = 5;
+            this.BtnLoadExample.Text = "Load an Example!";
+            this.BtnLoadExample.UseVisualStyleBackColor = true;
+            this.BtnLoadExample.Click += new System.EventHandler(this.BtnLoadExample_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1571, 689);
+            this.ClientSize = new System.Drawing.Size(1571, 710);
+            this.Controls.Add(this.BtnLoadExample);
             this.Controls.Add(this.BtnRunProgram);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.consoleProgram);
@@ -119,6 +131,7 @@
         private ConsoleControl consoleProgram;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button BtnRunProgram;
+        private System.Windows.Forms.Button BtnLoadExample;
     }
 }
 
