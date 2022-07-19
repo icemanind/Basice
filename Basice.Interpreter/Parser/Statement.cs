@@ -37,6 +37,17 @@ namespace Basice.Interpreter.Parser
             }
         }
 
+        public class DataStatement : Statement
+        {
+            public Queue<Expression> Data { get; }
+
+            public DataStatement(Queue<Expression> data, int basicLineNumber)
+            {
+                BasicLineNumber = basicLineNumber;
+                Data = data;
+            }
+        }
+
         public class DimStatement : Statement
         {
             public Token Name { get; }
@@ -151,6 +162,21 @@ namespace Basice.Interpreter.Parser
                 BasicLineNumber = basicLineNumber;
                 Expression = expression;
                 AddCrLf = addCrLf;
+            }
+        }
+
+        public class ReadStatement : Statement
+        {
+            public Token Name { get; }
+            public bool IsArray { get; }
+            public List<Expression> ArrayIndexes { get; }
+
+            public ReadStatement(Token name, bool isArray, List<Expression> arrayIndexes, int basicLineNumber)
+            {
+                BasicLineNumber = basicLineNumber;
+                IsArray = isArray;
+                ArrayIndexes = arrayIndexes;
+                Name = name;
             }
         }
 

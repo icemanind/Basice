@@ -164,6 +164,7 @@ namespace Basice.Interpreter.Parser
         {
             if (Match(TokenType.Cls)) return ClsStatement();
             if (Match(TokenType.Cursor)) return CursorStatement();
+            if (Match(TokenType.Data)) return DataStatement();
             if (Match(TokenType.Dim)) return DimStatement();
             if (Match(TokenType.End)) return EndStatement();
             if (Match(TokenType.For)) return ForStatement();
@@ -173,6 +174,7 @@ namespace Basice.Interpreter.Parser
             if (Match(TokenType.Locate)) return LocateStatement();
             if (Match(TokenType.Next)) return NextStatement();
             if (Match(TokenType.Print)) return PrintStatement();
+            if (Match(TokenType.Read)) return ReadStatement();
             if (Match(TokenType.Return)) return ReturnStatement();
 
             throw new ParserException(Error($"Unrecognized statement '{_tokens[_current].Lexeme}'", Previous()));
@@ -370,6 +372,27 @@ namespace Basice.Interpreter.Parser
             throw new ParserException(Error("Expected 'OFF' or 'ON' following 'CURSOR' statement.", Previous()));
         }
 
+        private Statement DataStatement()
+        {
+            var data = new Queue<Expression>();
+
+            while (!IsAtEnd())
+            {
+                Expression val = Expression();
+                if (!(val is Expression.Literal))
+                {
+                    throw new ParserException(Error("DATA values cannot be expressions and must be literal strings or literal numbers.",
+                        Previous()));
+                }
+
+                data.Enqueue(val);
+                if (Peek().Type != TokenType.Comma) break;
+                Advance();
+            }
+
+            return new Statement.DataStatement(data, _currentBasicLineNumber);
+        }
+
         private Statement DimStatement()
         {
             var capacities = new List<Expression>();
@@ -547,6 +570,38 @@ namespace Basice.Interpreter.Parser
                 return new Statement.PrintStatement(value, false, _currentBasicLineNumber);
             }
             return new Statement.PrintStatement(value, true, _currentBasicLineNumber);
+        }
+
+        private Statement ReadStatement()
+        {
+            if (!Match(TokenType.Identifier))
+            {
+                throw new ParserException(Error("Expected identifier after 'READ' statement.", Peek()));
+            }
+
+            Token identifier = Previous();
+
+            if (Match(TokenType.LeftParenthesis))
+            {
+                var indices = new List<Expression>();
+
+                do
+                {
+                    Expression indexExpression = Expression();
+                    indices.Add(indexExpression);
+                    if (Peek().Type != TokenType.Comma) break;
+                    Advance();
+                } while (true);
+                
+                if (!Match(TokenType.RightParenthesis))
+                {
+                    throw new ParserException(Error("Expected ')' after array indexer expression.", Peek()));
+                }
+
+                return new Statement.ReadStatement(identifier, true, indices, _currentBasicLineNumber);
+            }
+
+            return new Statement.ReadStatement(identifier, false, null, _currentBasicLineNumber);
         }
 
         private Statement ReturnStatement()

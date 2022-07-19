@@ -8,6 +8,8 @@ namespace Basice.Interpreter.Interpreter
 {
     public class Interpreter
     {
+        private readonly Queue<double> _numberData;
+        private readonly Queue<string> _stringData;
         private readonly List<Statement> _statements;
         private readonly Stack<int> _gosubStack;
         private readonly ITextOutput _textOutputDevice;
@@ -22,6 +24,8 @@ namespace Basice.Interpreter.Interpreter
 
         public Interpreter(List<Statement> statements, ITextOutput textOutputDevice, ITextInput textInputDevice)
         {
+            _numberData = new Queue<double>();
+            _stringData = new Queue<string>();
             _endHit = false;
             _statements = statements;
             _currentStatementIndex = 0;
@@ -52,12 +56,35 @@ namespace Basice.Interpreter.Interpreter
         {
             _endHit = false;
             _textInputDevice.ClearBuffer();
+            ParseDataStatements();
             while (_currentStatementIndex < _statements.Count)
             {
                 if (_endHit) break;
                 await ExecuteAsync(_statements[_currentStatementIndex]);
                 await Task.Delay(1);
                 _currentStatementIndex++;
+            }
+        }
+
+        private void ParseDataStatements()
+        {
+            foreach (Statement statement in _statements)
+            {
+                if (statement is Statement.DataStatement)
+                {
+                    var dataStatement = statement as Statement.DataStatement;
+                    foreach (var expression in dataStatement.Data)
+                    {
+                        object dataObj = Evaluate(expression);
+                        if (dataObj is double)
+                        {
+                            _numberData.Enqueue((double)dataObj);
+                        } else if (dataObj is string)
+                        {
+                            _stringData.Enqueue((string)dataObj);
+                        }
+                    }
+                }
             }
         }
 
@@ -73,6 +100,8 @@ namespace Basice.Interpreter.Interpreter
                     break;
                 case nameof(Statement.CursorStatement):
                     await CursorAsync((Statement.CursorStatement)statement);
+                    break;
+                case nameof(Statement.DataStatement):
                     break;
                 case nameof(Statement.DimStatement):
                     Dim((Statement.DimStatement)statement);
@@ -97,6 +126,9 @@ namespace Basice.Interpreter.Interpreter
                     break;
                 case nameof(Statement.PrintStatement):
                     await Print((Statement.PrintStatement)statement);
+                    break;
+                case nameof(Statement.ReadStatement):
+                    Read((Statement.ReadStatement)statement);
                     break;
                 case nameof(Statement.ReturnStatement):
                     Return((Statement.ReturnStatement)statement);
@@ -405,6 +437,58 @@ namespace Basice.Interpreter.Interpreter
             {
                 _textOutputDevice.Print(value + crlf, _textOutputDevice.GetCursorPosition().Y, _textOutputDevice.GetCursorPosition().X);
             }
+        }
+
+        private void Read(Statement.ReadStatement statement)
+        {
+            bool isString = statement.Name.Lexeme.EndsWith("$");
+
+            if (isString && _stringData.Count == 0)
+            {
+                throw new RuntimeException("Not enough 'DATA' statements for 'READ' operation.", statement.Name);
+            }
+
+            if (!isString && _numberData.Count == 0)
+            {
+                throw new RuntimeException("Not enough 'DATA' statements for 'READ' operation.", statement.Name);
+            }
+
+            if (!statement.IsArray)
+            {
+                if (_variables.ContainsKey(statement.Name.Lexeme.ToUpper()))
+                {
+                    _variables.Remove(statement.Name.Lexeme.ToUpper());
+                }
+
+                if (isString && !statement.IsArray)
+                {
+                    _variables.Add(statement.Name.Lexeme.ToUpper(), _stringData.Dequeue());
+                }
+                else
+                {
+                    _variables.Add(statement.Name.Lexeme.ToUpper(), _numberData.Dequeue());
+                }
+
+                return;
+            }
+
+            if (isString)
+            {
+                var vas = new Statement.VariableArrayStatement(statement.Name,
+                    statement.ArrayIndexes, new Expression.Literal(_stringData.Dequeue()),
+                    statement.Name.Line);
+
+                DefineArrayVariable(vas);
+            }
+            else
+            {
+                var vas = new Statement.VariableArrayStatement(statement.Name,
+                    statement.ArrayIndexes, new Expression.Literal(_numberData.Dequeue()),
+                    statement.Name.Line);
+
+                DefineArrayVariable(vas);
+            }
+            
         }
 
         private void Return(Statement.ReturnStatement statement)

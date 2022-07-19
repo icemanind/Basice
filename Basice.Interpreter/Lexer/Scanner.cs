@@ -26,6 +26,7 @@ namespace Basice.Interpreter.Lexer
             _keywords.Add("AND", TokenType.And);
             _keywords.Add("CLS", TokenType.Cls);
             _keywords.Add("CURSOR", TokenType.Cursor);
+            _keywords.Add("DATA", TokenType.Data);
             _keywords.Add("DIM", TokenType.Dim);
             _keywords.Add("ELSE", TokenType.Else);
             _keywords.Add("END", TokenType.End);
@@ -40,6 +41,7 @@ namespace Basice.Interpreter.Lexer
             _keywords.Add("ON", TokenType.On);
             _keywords.Add("OR", TokenType.Or);
             _keywords.Add("PRINT", TokenType.Print);
+            _keywords.Add("READ", TokenType.Read);
             _keywords.Add("RETURN", TokenType.Return);
             _keywords.Add("STEP", TokenType.Step);
             _keywords.Add("THEN", TokenType.Then);
