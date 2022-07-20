@@ -5,7 +5,7 @@ using Basice.Interpreter.Lexer;
 
 namespace Basice.Interpreter.Interpreter.Stdlib
 {
-    public class Abs : ICallable
+    public class Cos : ICallable
     {
         public int NumberOfArguments()
         {
@@ -16,12 +16,12 @@ namespace Basice.Interpreter.Interpreter.Stdlib
         {
             if (!(arguments[0] is double))
             {
-                throw new RuntimeException("ABS argument must be a number.", token);
+                throw new RuntimeException("COS argument must be a number.", token);
             }
 
             double dblValue = (double)arguments[0];
 
-            return Math.Abs(dblValue);
+            return Math.Cos(dblValue);
         }
     }
 }

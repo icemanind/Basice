@@ -310,13 +310,16 @@ namespace Basice.UI
                             ? _consoleBackgroundColor
                             : _textBlockArray[i].BackgroundColor;
 
-                        Brush bgBrush = new SolidBrush(bc);
-                        Brush fgBrush = new SolidBrush(fc);
-
-                        g.FillRectangle(bgBrush, new Rectangle(x + 2, y + 1, charWidth, charHeight));
-                        g.DrawString(
-                            _textBlockArray[i].Character == '\0' ? " " : _textBlockArray[i].Character.ToString(),
-                            _renderFont, fgBrush, new PointF(x, y));
+                        using (Brush bgBrush = new SolidBrush(bc))
+                        {
+                            using (Brush fgBrush = new SolidBrush(fc))
+                            {
+                                g.FillRectangle(bgBrush, new Rectangle(x + 2, y + 1, charWidth, charHeight));
+                                g.DrawString(
+                                    _textBlockArray[i].Character == '\0' ? " " : _textBlockArray[i].Character.ToString(),
+                                    _renderFont, fgBrush, new PointF(x, y));
+                            }
+                        }
 
                         x += charWidth;
                         if (x > 79 * charWidth)

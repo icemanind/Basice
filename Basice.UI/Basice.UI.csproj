@@ -92,6 +92,7 @@
     <EmbeddedResource Include="Examples\AddingMachine.basice" />
     <EmbeddedResource Include="Examples\Factors.basice" />
     <EmbeddedResource Include="Examples\Hangman.basice" />
+    <EmbeddedResource Include="Examples\Clock.basice" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

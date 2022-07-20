@@ -1,0 +1,16 @@
+﻿Clock
+A program to simply display a continuous clock as a demonstration of time functions. It also demonstrates how you can "beep" by printing an ASCII 7 to the console
+CLS, PRINT, INKEY$, CHR$, LOCATE, HOUR, MINUTE, SECOND, STR$, GOTO
+10 CLS: CURSOR OFF
+20 LOCATE 1,1
+30 H=HOUR()
+40 H$=STR$(H):IF LEN(H$)=1 THEN H$="0"+H$
+50 M=MINUTE()
+60 M$=STR$(M):IF LEN(M$)=1 THEN M$="0"+M$
+70 S=SECOND()
+80 S$=STR$(S):IF LEN(S$)=1 THEN S$="0"+S$
+90 PRINT H$+":"+M$+":"+S$
+95 PRINT "PRESS A KEY TO END THIS."
+100 A$=INKEY$():IF A$=CHR$(0) THEN GOTO 20
+110 LOCATE 1,1:PRINT "SHOW OVER!!!!!!!"
+120 LOCATE 2,1:PRINT "                                      " + CHR$(7)

@@ -38,17 +38,27 @@ namespace Basice.Interpreter.Interpreter
                 { "ABS", new Stdlib.Abs() },
                 { "ASC", new Stdlib.Asc() },
                 { "CHR$", new Stdlib.Chr() },
+                { "COS", new Stdlib.Cos() },
+                { "DAY", new Stdlib.Day() },
                 { "HEX$", new Stdlib.Hex() },
+                { "HOUR", new Stdlib.Hour() },
                 { "INKEY$", new Stdlib.Inkey() },
                 { "INT", new Stdlib.Int() },
                 { "LEFT$", new Stdlib.Left() },
                 { "LEN", new Stdlib.Len() },
+                { "LOG", new Stdlib.Log() },
                 { "MID$", new Stdlib.Mid() },
+                { "MINUTE", new Stdlib.Minute() },
+                { "MONTH", new Stdlib.Month() },
                 { "RGB", new Stdlib.Rgb() },
                 { "RND", new Stdlib.Rnd() },
                 { "RIGHT$", new Stdlib.Right() },
+                { "SECOND", new Stdlib.Second() },
+                { "SIN", new Stdlib.Sin() },
+                { "SQR", new Stdlib.Sqr() },
                 { "STR$", new Stdlib.Str() },
-                { "VAL", new Stdlib.Val() }
+                { "VAL", new Stdlib.Val() },
+                { "YEAR", new Stdlib.Year() }
             };
         }
 
