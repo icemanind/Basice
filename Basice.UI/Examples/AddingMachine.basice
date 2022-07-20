@@ -1,6 +1,6 @@
 ﻿Adding Machine
 A program to add up to 10 numbers together
-CLS, PRINT, DIM, FOR/NEXT, INPUT$, IF/THEN/ELSE, GOTO, VAL
+CLS, PRINT, DIM, FOR/NEXT, INPUT, IF/THEN/ELSE, GOTO, VAL
 10 CLS: DIM N(10)
 20 PRINT "Enter up to 10 numbers, one at a time. Press q when done:"
 30 FOR X=1 TO 10
