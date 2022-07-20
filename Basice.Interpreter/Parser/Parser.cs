@@ -59,6 +59,7 @@ namespace Basice.Interpreter.Parser
                 throw new ParserException(Error("Missing 'NEXT' statement.", Previous()));
             }
 
+            statements.Add(new Statement.EndStatement(1000000));
             return statements;
         }
 
@@ -171,6 +172,7 @@ namespace Basice.Interpreter.Parser
             if (Match(TokenType.Gosub)) return GosubStatement();
             if (Match(TokenType.Goto)) return GotoStatement();
             if (Match(TokenType.If)) return IfStatement();
+            if (Match(TokenType.Input)) return InputStatement();
             if (Match(TokenType.Locate)) return LocateStatement();
             if (Match(TokenType.Next)) return NextStatement();
             if (Match(TokenType.Print)) return PrintStatement();
@@ -527,6 +529,38 @@ namespace Basice.Interpreter.Parser
             }
 
             return new Statement.IfStatement(condition, thenBranch, elseClause, _currentBasicLineNumber);
+        }
+
+        private Statement InputStatement()
+        {
+            if (!Match(TokenType.Identifier))
+            {
+                throw new ParserException(Error("Expected identifier after 'INPUT' statement.", Previous()));
+            }
+
+            Token name = Previous();
+
+            if (Match(TokenType.LeftParenthesis))
+            {
+                var indices = new List<Expression>();
+
+                do
+                {
+                    Expression indexExpression = Expression();
+                    indices.Add(indexExpression);
+                    if (Peek().Type != TokenType.Comma) break;
+                    Advance();
+                } while (true);
+
+                if (!Match(TokenType.RightParenthesis))
+                {
+                    throw new ParserException(Error("Expected ')' after array indexer expression.", Peek()));
+                }
+
+                return new Statement.InputStatement(name, true, indices, _currentBasicLineNumber);
+            }
+
+            return new Statement.InputStatement(name, false, null, _currentBasicLineNumber);
         }
 
         private Statement LocateStatement()

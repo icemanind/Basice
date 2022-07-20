@@ -141,6 +141,22 @@ namespace Basice.UI
             KeyPress += ConsoleControlKeyPress;
         }
 
+        public void Reset()
+        {
+            _keysBuffer.Clear();
+            _commandBuffer.Clear();
+            _commandBufferIndex = 0;
+            _cursorX = 0;
+            _cursorY = 0;
+
+            for (int i = 0; i < ScreenSize; i++)
+            {
+                _textBlockArray[i].BackgroundColor = ConsoleBackgroundColor;
+                _textBlockArray[i].ForegroundColor = ConsoleForegroundColor;
+                _textBlockArray[i].Character = '\0';
+            }
+        }
+
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (!ProcessKeys) return base.ProcessCmdKey(ref msg, keyData); 
@@ -236,6 +252,8 @@ namespace Basice.UI
 
             if (e.KeyChar == '\r')
             {
+                bool sc = ShowCursor;
+                ShowCursor = false;
                 if (Environment.NewLine.Length == 2)
                     _keysBuffer.Add('\n');
                 string s = _keysBuffer.Aggregate("", (current, c) => current + c);
@@ -245,6 +263,7 @@ namespace Basice.UI
                 _commandBufferIndex = _commandBuffer.Count;
                 if (LineEntered != null)
                     LineEntered(this, s);
+                ShowCursor = sc;
             }
             Invalidate();
         }

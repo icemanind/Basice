@@ -34,6 +34,7 @@ namespace Basice.Interpreter.Lexer
             _keywords.Add("GOSUB", TokenType.Gosub);
             _keywords.Add("GOTO", TokenType.Goto);
             _keywords.Add("IF", TokenType.If);
+            _keywords.Add("INPUT", TokenType.Input);
             _keywords.Add("LOCATE", TokenType.Locate);
             _keywords.Add("NEXT", TokenType.Next);
             _keywords.Add("NOT", TokenType.Not);

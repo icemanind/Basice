@@ -123,6 +123,21 @@ namespace Basice.Interpreter.Parser
             }
         }
 
+        public class InputStatement : Statement
+        {
+            public Token Name { get; }
+            public bool IsArray { get; }
+            public List<Expression> ArrayIndexes { get; }
+
+            public InputStatement(Token name, bool isArray, List<Expression> arrayIndexes, int basicLineNumber)
+            {
+                Name = name;
+                BasicLineNumber = basicLineNumber;
+                IsArray = isArray;
+                ArrayIndexes = arrayIndexes;
+            }
+        }
+
         public class LocateStatement : Statement
         {
             public Expression Y { get; }

@@ -1,0 +1,5 @@
+﻿Hello World!
+Classic "Hello World!" implementation.
+CLS, PRINT
+10 CLS
+20 PRINT "Hello World!"

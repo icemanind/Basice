@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Basice.Interpreter.Exceptions;
+﻿using Basice.Interpreter.Exceptions;
 using Basice.Interpreter.Lexer;
 using Basice.Interpreter.Parser;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Basice.Interpreter.Interpreter
 {
@@ -57,12 +57,20 @@ namespace Basice.Interpreter.Interpreter
             await _textOutputDevice.ClearScreenAsync();
             _endHit = false;
             _textInputDevice.ClearBuffer();
+            _variables.Clear();
+            _gosubStack.Clear();
+            _numberData.Clear();
+            _stringData.Clear();
             ParseDataStatements();
             while (_currentStatementIndex < _statements.Count)
             {
                 if (_endHit) break;
                 await ExecuteAsync(_statements[_currentStatementIndex]);
-                await Task.Delay(1);
+                do
+                {
+                    await Task.Delay(1);
+                } while (_textInputDevice.IsWaitingForInput());
+
                 _currentStatementIndex++;
             }
         }
@@ -80,7 +88,8 @@ namespace Basice.Interpreter.Interpreter
                         if (dataObj is double)
                         {
                             _numberData.Enqueue((double)dataObj);
-                        } else if (dataObj is string)
+                        }
+                        else if (dataObj is string)
                         {
                             _stringData.Enqueue((string)dataObj);
                         }
@@ -91,6 +100,10 @@ namespace Basice.Interpreter.Interpreter
 
         private async Task ExecuteAsync(Statement statement)
         {
+            while (_textInputDevice.IsWaitingForInput())
+            {
+                await Task.Delay(1);
+            }
             switch (statement.GetType().Name)
             {
                 case nameof(Statement.Block):
@@ -121,6 +134,9 @@ namespace Basice.Interpreter.Interpreter
                     break;
                 case nameof(Statement.IfStatement):
                     await IfAsync((Statement.IfStatement)statement);
+                    break;
+                case nameof(Statement.InputStatement):
+                    Input((Statement.InputStatement)statement);
                     break;
                 case nameof(Statement.LocateStatement):
                     await LocateAsync((Statement.LocateStatement)statement);
@@ -227,14 +243,15 @@ namespace Basice.Interpreter.Interpreter
                     }
 
                     _variables.Add(statement.Name.Lexeme.ToUpper(), r);
-                } else if (capacities.Count == 2)
+                }
+                else if (capacities.Count == 2)
                 {
                     var r = new string[capacities[0] + 1, capacities[1] + 1];
                     for (int x = 0; x < capacities[0] + 1; x++)
                     {
                         for (int y = 0; y < capacities[1] + 1; y++)
                         {
-                            r[x,y] = "";
+                            r[x, y] = "";
                         }
                     }
 
@@ -352,7 +369,7 @@ namespace Basice.Interpreter.Interpreter
                 }
                 _currentStatementIndex = currentNextIndex;
             }
-            
+
         }
 
         private void Gosub(Statement.GosubStatement statement)
@@ -390,12 +407,40 @@ namespace Basice.Interpreter.Interpreter
             if (IsTruthy(Evaluate(statement.Condition)))
             {
                 await ExecuteAsync(statement.ThenBranch);
-            } else if (statement.ElseBranch != null)
+            }
+            else if (statement.ElseBranch != null)
             {
                 await ExecuteAsync(statement.ElseBranch);
             }
+        }
 
-            return;
+        private void Input(Statement.InputStatement statement)
+        {
+            _textInputDevice.LineEntered += InputCompleted;
+            _textInputDevice.Input(statement);
+        }
+
+        private void InputCompleted(string line, Statement.InputStatement statement)
+        {
+            line = line.Replace("\r", "").Replace("\n", "");
+
+            if (!statement.IsArray)
+            {
+                if (_variables.ContainsKey(statement.Name.Lexeme.ToUpper()))
+                {
+                    _variables.Remove(statement.Name.Lexeme.ToUpper());
+                }
+
+                _variables.Add(statement.Name.Lexeme.ToUpper(), line);
+            }
+            else
+            {
+                var vas = new Statement.VariableArrayStatement(statement.Name,
+                    statement.ArrayIndexes, new Expression.Literal(line),
+                    statement.Name.Line);
+
+                DefineArrayVariable(vas);
+            }
         }
 
         private async Task LocateAsync(Statement.LocateStatement statement)
@@ -555,7 +600,8 @@ namespace Basice.Interpreter.Interpreter
                         throw new RuntimeException("Index outside of array bounds.", statement.Name);
                     }
                     obj[indices[0]] = (string)init;
-                } else if (arrayObj is string[,])
+                }
+                else if (arrayObj is string[,])
                 {
                     string[,] obj = (string[,])arrayObj;
 
@@ -703,13 +749,16 @@ namespace Basice.Interpreter.Interpreter
             if (callee is double[])
             {
                 return ((double[])callee)[(int)(double)arguments[0]];
-            } else if (callee is string[])
+            }
+            else if (callee is string[])
             {
                 return ((string[])callee)[(int)(double)arguments[0]];
-            } else if (callee is double[,]) 
+            }
+            else if (callee is double[,])
             {
                 return ((double[,])callee)[(int)(double)arguments[0], (int)(double)arguments[1]];
-            } else if (callee is string[,])
+            }
+            else if (callee is string[,])
             {
                 return ((string[,])callee)[(int)(double)arguments[0], (int)(double)arguments[1]];
             }
@@ -827,7 +876,7 @@ namespace Basice.Interpreter.Interpreter
         private bool IsTruthy(object obj)
         {
             if (obj is double) return ((double)obj).Equals(1);
-            
+
             throw new System.Exception();
         }
         #endregion

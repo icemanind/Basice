@@ -14,8 +14,8 @@
         NewLine,
 
         // Statements
-        And, Cls, Data, Dim, Cursor, Else, End, For, Gosub, Goto, If, Locate, Off, On, 
-        Or, Next, Not, Print, Read, Restore, Return, Step, Then, To,
+        And, Cls, Data, Dim, Cursor, Else, End, For, Gosub, Goto, If, Input, Locate,
+        Off, On, Or, Next, Not, Print, Read, Restore, Return, Step, Then, To,
 
         // No Operation
         Nop,

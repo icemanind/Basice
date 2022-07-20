@@ -10,16 +10,12 @@ namespace Basice.UI
         private readonly ConsoleControl _control;
         private int _backgroundColor;
         private int _foregroundColor;
-        private int _cursorX;
-        private int _cursorY;
 
         public bool AsyncAvailable => true;
 
         public ConsoleControlOutputDevice(ConsoleControl control)
         {
             _control = control;
-            _cursorX = 0;
-            _cursorY = 0;
             _backgroundColor = ConsoleColor.Black;
             _foregroundColor = ConsoleColor.Gray;
         }
@@ -62,7 +58,7 @@ namespace Basice.UI
 
         public CursorLocation GetCursorPosition()
         {
-            return new CursorLocation(_cursorY, _cursorX);
+            return new CursorLocation(_control.GetCursorPosition().Row , _control.GetCursorPosition().Column );
         }
 
         public int GetForegroundColor()
@@ -87,7 +83,7 @@ namespace Basice.UI
 
         public async Task PrintAsync(string text)
         {
-            await PrintAsync(text, _cursorY, _cursorX);
+            await PrintAsync(text, _control.GetCursorPosition().Row, _control.GetCursorPosition().Column);
         }
 
         public async Task PrintAsync(string text, int locationY, int locationX)
@@ -99,8 +95,8 @@ namespace Basice.UI
         {
             _control.SetCursorPosition(locationY, locationX);
             await Task.Run(() => _control.Write(text, MapIntToColor(foregroundColor), MapIntToColor(backgroundColor)));
-            _cursorX = _control.GetCursorPosition().Column;
-            _cursorY = _control.GetCursorPosition().Row;
+            //_cursorX = _control.GetCursorPosition().Column;
+            //_cursorY = _control.GetCursorPosition().Row;
         }
 
         public void SetBackgroundColor(int color)
@@ -132,14 +128,11 @@ namespace Basice.UI
 
         public void SetCursorPosition(int y, int x)
         {
-            _cursorX = x;
-            _cursorY = y;
+            _control.SetCursorPosition(y, x);
         }
 
         public async Task SetCursorPositionAsync(int y, int x)
         {
-            _cursorX = x;
-            _cursorY = y;
             await Task.Run(() => _control.SetCursorPosition(y,x));
         }
 
