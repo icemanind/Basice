@@ -189,17 +189,17 @@ There are several math functions built in:
 
 | Function | Description                                                                                             | Example                                                       |
 |----------|---------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|
-| ABS()    | Returns the absolute value of a number                                                                  | PRINT ABS(-3) ' Prints 3                                      |
-| ASC()    | Returns the ASCII code of the first character in a string                                               | PRINT ASC("A") ' Prints 65                                    |
-| CHR$()   | Returns the character represented by the ASCII code                                                     | PRINT CHR$(65) ' Prints A                                     |
-| COS()    | Returns the Cosine of a number                                                                          | PRINT COS(2/5) ' Prints 0.921060994002885                     |
-| DAY()    | Returns the day of the month (1-31)                                                                     | PRINT DAY() ' If today's date is July 31st, then it prints 31 |
-| HEX$()   | Returns the hexadecimal equivalent of the number                                                        | PRINT HEX$(15) ' Prints F                                     |
-| HOUR()   | Returns the current hour of the time                                                                    | PRINT HOUR() ' Prints 14 if the current time was 2:23pm       |
-| INKEY$() | Returns the character pressed on the keyboard, or \0 if no key was pressed                              | PRINT INKEY$() ' Prints A if the A key was pressed            |
-| INT      | Returns the whole number part of a fraction.                                                            | PRINT INT(3.2518) ' Prints 3                                  |
-| LEFT$()  | Returns the left most part of a string. The second parameters determines how many characters to return. | PRINT LEFT$("HELLO",2) ' Prints HE                            |
-| LEN()    | Returns the length of a string                                                                          | PRINT LEN("HELLO") ' Prints 5                                 |
+| `ABS()`    | Returns the absolute value of a number                                                                  | `PRINT ABS(-3) ' Prints 3`                                      |
+| `ASC()`    | Returns the ASCII code of the first character in a string                                               | `PRINT ASC("A") ' Prints 65`                                    |
+| `CHR$()`   | Returns the character represented by the ASCII code                                                     | `PRINT CHR$(65) ' Prints A`                                     |
+| `COS()`    | Returns the Cosine of a number                                                                          | `PRINT COS(2/5) ' Prints 0.921060994002885`                    |
+| `DAY()`    | Returns the day of the month (1-31)                                                                     | `PRINT DAY() ' If today's date is July 31st, then it prints 31` |
+| `HEX$()`   | Returns the hexadecimal equivalent of the number                                                        | `PRINT HEX$(15) ' Prints F`                                     |
+| `HOUR()`   | Returns the current hour of the time                                                                    | `PRINT HOUR() ' Prints 14 if the current time was 2:23pm`       |
+| `INKEY$()` | Returns the character pressed on the keyboard, or \0 if no key was pressed                              | `PRINT INKEY$() ' Prints A if the A key was pressed`            |
+| `INT`      | Returns the whole number part of a fraction.                                                            | `PRINT INT(3.2518) ' Prints 3`                                  |
+| `LEFT$()`  | Returns the left most part of a string. The second parameters determines how many characters to return. | `PRINT LEFT$("HELLO",2) ' Prints HE`                            |
+| `LEN()`    | Returns the length of a string                                                                          | `PRINT LEN("HELLO") ' Prints 5`                                 |
 
 
 
