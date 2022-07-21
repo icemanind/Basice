@@ -168,6 +168,41 @@ Another useful statement is the `END` statement. This command simply ends the pr
     
 This will print the numbers `1-7`, but the program ends after the 8th iteration. 
 
+Basice also supports the `INPUT` statement. This statement will prompt the user to enter something. The program then waits for a user to enter something before continuing execution. Whatever the user types is stored in a string variable. Here is an example:
+
+    10 CLS
+    20 PRINT "WHAT IS YOUR NAME? ";
+    30 INPUT NAME$
+    40 PRINT "WELL HELLO, " + NAME$
+    
+In addition to `INPUT`,  Basice also has an `INKEY$` function. This function checks to see if a key has been pressed. If it has, it returns the pressed key. If no key was pressed, then it returns a value of zero. Here is an example:
+
+    10 CLS
+    20 PRINT "PRESS A KEY"
+    30 KEY$=INKEY$()
+    40 IF KEY$=CHR$(0) THEN GOTO 30
+    50 PRINT "YOU PRESSED " + KEY$
+    
+The program above uses `INKEY$` function to check if a key was pressed. If there hasn't, then it just keeps checking. When a key finally gets pressed, it prints it to the screen. 
+
+There are several math functions built in:
+
+| Function | Description                                                                                             | Example                                                       |
+|----------|---------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|
+| ABS()    | Returns the absolute value of a number                                                                  | PRINT ABS(-3) ' Prints 3                                      |
+| ASC()    | Returns the ASCII code of the first character in a string                                               | PRINT ASC("A") ' Prints 65                                    |
+| CHR$()   | Returns the character represented by the ASCII code                                                     | PRINT CHR$(65) ' Prints A                                     |
+| COS()    | Returns the Cosine of a number                                                                          | PRINT COS(2/5) ' Prints 0.921060994002885                     |
+| DAY()    | Returns the day of the month (1-31)                                                                     | PRINT DAY() ' If today's date is July 31st, then it prints 31 |
+| HEX$()   | Returns the hexadecimal equivalent of the number                                                        | PRINT HEX$(15) ' Prints F                                     |
+| HOUR()   | Returns the current hour of the time                                                                    | PRINT HOUR() ' Prints 14 if the current time was 2:23pm       |
+| INKEY$() | Returns the character pressed on the keyboard, or \0 if no key was pressed                              | PRINT INKEY$() ' Prints A if the A key was pressed            |
+| INT      | Returns the whole number part of a fraction.                                                            | PRINT INT(3.2518) ' Prints 3                                  |
+| LEFT$()  | Returns the left most part of a string. The second parameters determines how many characters to return. | PRINT LEFT$("HELLO",2) ' Prints HE                            |
+| LEN()    | Returns the length of a string                                                                          | PRINT LEN("HELLO") ' Prints 5                                 |
+
+
+
 ## Author
 
 [Alan Bryan](https://www.icemanind.com)
