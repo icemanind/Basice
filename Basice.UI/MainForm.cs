@@ -17,6 +17,9 @@ namespace Basice.UI
         public MainForm()
         {
             InitializeComponent();
+
+            txtProgram.Text = "10 CLS" + Environment.NewLine + "20 COLOR RGB(255,255,255),RGB(80,80,255)" +
+                              Environment.NewLine + "30 PRINT \"TEST\"";
         }
 
         private async void BtnRunProgram_Click(object sender, EventArgs e)

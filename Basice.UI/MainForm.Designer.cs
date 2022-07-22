@@ -72,6 +72,7 @@
             this.consoleProgram.ForeColor = System.Drawing.Color.LightGray;
             this.consoleProgram.Location = new System.Drawing.Point(901, 37);
             this.consoleProgram.Name = "consoleProgram";
+            this.consoleProgram.ProcessKeys = true;
             this.consoleProgram.ShowCursor = true;
             this.consoleProgram.Size = new System.Drawing.Size(646, 377);
             this.consoleProgram.TabIndex = 2;

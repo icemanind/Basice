@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Globalization;
 using System.Threading.Tasks;
 using Basice.Interpreter.Interpreter;
 
@@ -8,16 +9,12 @@ namespace Basice.UI
     public class ConsoleControlOutputDevice : ITextOutput
     {
         private readonly ConsoleControl _control;
-        private int _backgroundColor;
-        private int _foregroundColor;
 
         public bool AsyncAvailable => true;
 
         public ConsoleControlOutputDevice(ConsoleControl control)
         {
             _control = control;
-            _backgroundColor = ConsoleColor.Black;
-            _foregroundColor = ConsoleColor.Gray;
         }
         
         private Color MapIntToColor(int color)
@@ -47,13 +44,15 @@ namespace Basice.UI
 
         public async Task ClearScreenAsync()
         {
-            _control.ConsoleBackgroundColor = MapIntToColor(_backgroundColor);
+            _control.ConsoleBackgroundColor = _control.CurrentBackgroundColor;
             await Task.Run(() => _control.Clear()); 
         }
 
         public int GetBackgroundColor()
         {
-            return _backgroundColor;
+            string hex = $"{_control.CurrentBackgroundColor.R:x2}{_control.CurrentBackgroundColor.G:x2}{_control.CurrentBackgroundColor.B:x2}";
+
+            return int.Parse(hex, NumberStyles.HexNumber);
         }
 
         public CursorLocation GetCursorPosition()
@@ -63,7 +62,9 @@ namespace Basice.UI
 
         public int GetForegroundColor()
         {
-            return _foregroundColor;
+            string hex = $"{_control.CurrentForegroundColor.R:x2}{_control.CurrentForegroundColor.G:x2}{_control.CurrentForegroundColor.B:x2}";
+
+            return int.Parse(hex, NumberStyles.HexNumber);
         }
 
         public void Print(string text)
@@ -71,37 +72,14 @@ namespace Basice.UI
             throw new NotImplementedException();
         }
 
-        public void Print(string text, int locationY, int locationX)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Print(string text, int locationY, int locationX, int foregroundColor, int backgroundColor)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task PrintAsync(string text)
         {
-            await PrintAsync(text, _control.GetCursorPosition().Row, _control.GetCursorPosition().Column);
+            await Task.Run(() => _control.Write(text, _control.CurrentForegroundColor, _control.CurrentBackgroundColor));
         }
 
-        public async Task PrintAsync(string text, int locationY, int locationX)
+        public void SetBackgroundColor(int red, int green, int blue)
         {
-            await PrintAsync(text, locationY, locationX, _foregroundColor, _backgroundColor);
-        }
-
-        public async Task PrintAsync(string text, int locationY, int locationX, int foregroundColor, int backgroundColor)
-        {
-            _control.SetCursorPosition(locationY, locationX);
-            await Task.Run(() => _control.Write(text, MapIntToColor(foregroundColor), MapIntToColor(backgroundColor)));
-            //_cursorX = _control.GetCursorPosition().Column;
-            //_cursorY = _control.GetCursorPosition().Row;
-        }
-
-        public void SetBackgroundColor(int color)
-        {
-            _backgroundColor = color;
+            _control.CurrentBackgroundColor = Color.FromArgb(red, green, blue);
         }
 
         public Task SetCursorOffAsync()
@@ -136,9 +114,9 @@ namespace Basice.UI
             await Task.Run(() => _control.SetCursorPosition(y,x));
         }
 
-        public void SetForegroundColor(int color)
+        public void SetForegroundColor(int red, int green, int blue)
         {
-            _foregroundColor = color;
+            _control.CurrentForegroundColor = Color.FromArgb(red, green, blue);
         }
     }
 }

@@ -64,6 +64,8 @@ namespace Basice.Interpreter.Interpreter
 
         public async Task InterpretAsync()
         {
+            _textOutputDevice.SetBackgroundColor(0, 0, 0);
+            _textOutputDevice.SetForegroundColor(200, 200, 200);
             await _textOutputDevice.ClearScreenAsync();
             _endHit = false;
             _textInputDevice.ClearBuffer();
@@ -121,6 +123,9 @@ namespace Basice.Interpreter.Interpreter
                     break;
                 case nameof(Statement.ClsStatement):
                     await ClsAsync();
+                    break;
+                case nameof(Statement.ColorStatement):
+                    Color((Statement.ColorStatement)statement);
                     break;
                 case nameof(Statement.CursorStatement):
                     await CursorAsync((Statement.CursorStatement)statement);
@@ -192,6 +197,40 @@ namespace Basice.Interpreter.Interpreter
             else
             {
                 _textOutputDevice.ClearScreen();
+            }
+        }
+
+        private void Color(Statement.ColorStatement statement)
+        {
+            object foreColorObj = statement.ForegroundColor == null ? null : Evaluate(statement.ForegroundColor);
+            object backColorObj = statement.BackgroundColor == null ? null : Evaluate(statement.BackgroundColor);
+
+            if (foreColorObj != null)
+            {
+                if (!(foreColorObj is double))
+                {
+                    throw new RuntimeException("'COLOR' foreground must be a number.", statement.BasicLineNumber);
+                }
+            }
+
+            if (backColorObj != null)
+            {
+                if (!(backColorObj is double))
+                {
+                    throw new RuntimeException("'COLOR' background must be a number.", statement.BasicLineNumber);
+                }
+            }
+
+            if (foreColorObj != null)
+            {
+                int fc = (int)(double)foreColorObj;
+                _textOutputDevice.SetForegroundColor((fc >> 16) & 0xff, (fc >> 8) & 0xff, (fc >> 0) & 0xff);
+            }
+
+            if (backColorObj != null)
+            {
+                int bc = (int)(double)backColorObj;
+                _textOutputDevice.SetBackgroundColor((bc >> 16) & 0xff, (bc >> 8) & 0xff, (bc >> 0) & 0xff);
             }
         }
 
@@ -494,11 +533,11 @@ namespace Basice.Interpreter.Interpreter
 
             if (_textOutputDevice.AsyncAvailable)
             {
-                await _textOutputDevice.PrintAsync(value + crlf, _textOutputDevice.GetCursorPosition().Y, _textOutputDevice.GetCursorPosition().X);
+                await _textOutputDevice.PrintAsync(value + crlf);
             }
             else
             {
-                _textOutputDevice.Print(value + crlf, _textOutputDevice.GetCursorPosition().Y, _textOutputDevice.GetCursorPosition().X);
+                _textOutputDevice.Print(value + crlf);
             }
         }
 

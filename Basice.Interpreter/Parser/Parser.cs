@@ -164,6 +164,7 @@ namespace Basice.Interpreter.Parser
         private Statement Statement()
         {
             if (Match(TokenType.Cls)) return ClsStatement();
+            if (Match(TokenType.Color)) return ColorStatement();
             if (Match(TokenType.Cursor)) return CursorStatement();
             if (Match(TokenType.Data)) return DataStatement();
             if (Match(TokenType.Dim)) return DimStatement();
@@ -362,12 +363,43 @@ namespace Basice.Interpreter.Parser
             return new Statement.ClsStatement(_currentBasicLineNumber);
         }
 
+        private Statement ColorStatement()
+        {
+            Expression foregroundColor = null;
+            Expression backgroundColor = null;
+
+            if (!Match(TokenType.Comma))
+            {
+                foregroundColor = Expression();
+                if (Match(TokenType.Comma))
+                {
+                    backgroundColor = Expression();
+                }
+            }
+            else
+            {
+                backgroundColor = Expression();
+            }
+
+            if (foregroundColor == null)
+            {
+                return new Statement.ColorStatement(null, backgroundColor, _currentBasicLineNumber);
+            }
+            else if (backgroundColor == null)
+            {
+                return new Statement.ColorStatement(foregroundColor, null, _currentBasicLineNumber);
+            }
+
+            return new Statement.ColorStatement(foregroundColor, backgroundColor, _currentBasicLineNumber);
+        }
+
         private Statement CursorStatement()
         {
             if (Match(TokenType.On))
             {
                 return new Statement.CursorStatement(true, _currentBasicLineNumber);
-            } else if (Match(TokenType.Off))
+            }
+            else if (Match(TokenType.Off))
             {
                 return new Statement.CursorStatement(false, _currentBasicLineNumber);
             }
@@ -627,7 +659,7 @@ namespace Basice.Interpreter.Parser
                     if (Peek().Type != TokenType.Comma) break;
                     Advance();
                 } while (true);
-                
+
                 if (!Match(TokenType.RightParenthesis))
                 {
                     throw new ParserException(Error("Expected ')' after array indexer expression.", Peek()));

@@ -25,6 +25,7 @@ namespace Basice.Interpreter.Lexer
 
             _keywords.Add("AND", TokenType.And);
             _keywords.Add("CLS", TokenType.Cls);
+            _keywords.Add("COLOR", TokenType.Color);
             _keywords.Add("CURSOR", TokenType.Cursor);
             _keywords.Add("DATA", TokenType.Data);
             _keywords.Add("DIM", TokenType.Dim);

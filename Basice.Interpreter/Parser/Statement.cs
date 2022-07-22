@@ -26,6 +26,19 @@ namespace Basice.Interpreter.Parser
             }
         }
 
+        public class ColorStatement : Statement
+        {
+            public Expression ForegroundColor { get; }
+            public Expression BackgroundColor { get; }
+
+            public ColorStatement(Expression foregroundColor, Expression backgroundColor, int basicLineNumber)
+            {
+                BasicLineNumber = basicLineNumber;
+                ForegroundColor = foregroundColor;
+                BackgroundColor = backgroundColor;
+            }
+        }
+
         public class CursorStatement : Statement
         {
             public bool CursorOn { get; set; }
