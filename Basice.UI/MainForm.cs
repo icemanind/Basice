@@ -17,9 +17,6 @@ namespace Basice.UI
         public MainForm()
         {
             InitializeComponent();
-
-            txtProgram.Text = "10 CLS" + Environment.NewLine + "20 COLOR RGB(255,255,255),RGB(80,80,255)" +
-                              Environment.NewLine + "30 PRINT \"TEST\"";
         }
 
         private async void BtnRunProgram_Click(object sender, EventArgs e)
@@ -34,7 +31,8 @@ namespace Basice.UI
             consoleProgram.Reset();
             var outputDevice = new ConsoleControlOutputDevice(consoleProgram);
             var inputDevice = new ConsoleControlInputDevice(consoleProgram);
-            var interpreter = new Interpreter.Interpreter.Interpreter(statements, outputDevice, inputDevice);
+            var graphicsOutputDevice = new GraphicsControlOutputDevice(graphicsControl1);
+            var interpreter = new Interpreter.Interpreter.Interpreter(statements, outputDevice, inputDevice, graphicsOutputDevice);
 
             await interpreter.InterpretAsync();
         }

@@ -63,6 +63,16 @@
       <DependentUpon>ExamplesBrowser.cs</DependentUpon>
     </Compile>
     <Compile Include="Extensions.cs" />
+    <Compile Include="GraphicsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GraphicsControlCommands\IGraphicsCommand.cs" />
+    <Compile Include="GraphicsControlCommands\LineCommand.cs" />
+    <Compile Include="GraphicsControlCommands\RectangleCommand.cs" />
+    <Compile Include="GraphicsControlCommands\SetBackgroundColorCommand.cs" />
+    <Compile Include="GraphicsControlCommands\SetForegroundColorCommand.cs" />
+    <Compile Include="GraphicsControlCommands\PointCommand.cs" />
+    <Compile Include="GraphicsControlOutputDevice.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

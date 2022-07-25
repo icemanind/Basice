@@ -174,12 +174,14 @@ namespace Basice.Interpreter.Parser
             if (Match(TokenType.Goto)) return GotoStatement();
             if (Match(TokenType.If)) return IfStatement();
             if (Match(TokenType.Input)) return InputStatement();
+            if (Match(TokenType.Point)) return PointStatement();
             if (Match(TokenType.Locate)) return LocateStatement();
             if (Match(TokenType.Next)) return NextStatement();
             if (Match(TokenType.Print)) return PrintStatement();
             if (Match(TokenType.Read)) return ReadStatement();
             if (Match(TokenType.Restore)) return RestoreStatement();
             if (Match(TokenType.Return)) return ReturnStatement();
+            if (Match(TokenType.Screen)) return ScreenStatement();
 
             throw new ParserException(Error($"Unrecognized statement '{_tokens[_current].Lexeme}'", Previous()));
         }
@@ -595,6 +597,26 @@ namespace Basice.Interpreter.Parser
             return new Statement.InputStatement(name, false, null, _currentBasicLineNumber);
         }
 
+        private Statement PointStatement()
+        {
+            Expression x = Expression();
+
+            if (!Match(TokenType.Comma))
+            {
+                throw new ParserException(Error("Expected ',' after 'POINT' x-coordinate.", Peek()));
+            }
+
+            Expression y = Expression();
+            Expression color = null;
+
+            if (Match(TokenType.Comma))
+            {
+                color = Expression();
+            }
+
+            return new Statement.PointStatement(x, y, color, _currentBasicLineNumber);
+        }
+
         private Statement LocateStatement()
         {
             Expression y = Expression();
@@ -679,6 +701,13 @@ namespace Basice.Interpreter.Parser
         private Statement ReturnStatement()
         {
             return new Statement.ReturnStatement(_currentBasicLineNumber);
+        }
+
+        private Statement ScreenStatement()
+        {
+            Expression number = Expression();
+
+            return new Statement.ScreenStatement(number, _currentBasicLineNumber);
         }
 
         #endregion

@@ -2,26 +2,19 @@
 
 namespace Basice.Interpreter.Interpreter
 {
-    public interface ITextOutput
+    public interface IGraphicsOutput
     {
         bool AsyncAvailable { get; }
         void ClearScreen(int color);
         Task ClearScreenAsync(int color);
-        void ClearScreen();
-        Task ClearScreenAsync();
         int GetBackgroundColor();
-        CursorLocation GetCursorPosition();
         int GetForegroundColor();
-        void Print(string text);
-        Task PrintAsync(string text);
+        void Point(int x, int y, int color);
+        Task PointAsync(int x, int y, int color);
+        void Reset();
+        Task ResetAsync();
         void Screen(int number);
         void SetBackgroundColor(int red, int green, int blue);
-        Task SetCursorOffAsync();
-        void SetCursorOff();
-        Task SetCursorOnAsync();
-        void SetCursorOn();
-        void SetCursorPosition(int y, int x);
-        Task SetCursorPositionAsync(int y, int x);
         void SetForegroundColor(int red, int green, int blue);
     }
 }

@@ -77,6 +77,11 @@ namespace Basice.UI
             await Task.Run(() => _control.Write(text, _control.CurrentForegroundColor, _control.CurrentBackgroundColor));
         }
 
+        public void Screen(int number)
+        {
+            _control.Visible = number == 1;
+        }
+
         public void SetBackgroundColor(int red, int green, int blue)
         {
             _control.CurrentBackgroundColor = Color.FromArgb(red, green, blue);

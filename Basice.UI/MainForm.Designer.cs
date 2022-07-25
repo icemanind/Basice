@@ -30,10 +30,11 @@
         {
             this.txtProgram = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.consoleProgram = new Basice.UI.ConsoleControl();
             this.label2 = new System.Windows.Forms.Label();
             this.BtnRunProgram = new System.Windows.Forms.Button();
             this.BtnLoadExample = new System.Windows.Forms.Button();
+            this.graphicsControl1 = new Basice.UI.GraphicsControl();
+            this.consoleProgram = new Basice.UI.ConsoleControl();
             this.SuspendLayout();
             // 
             // txtProgram
@@ -58,24 +59,6 @@
             this.label1.Size = new System.Drawing.Size(176, 18);
             this.label1.TabIndex = 1;
             this.label1.Text = "Type your program here:";
-            // 
-            // consoleProgram
-            // 
-            this.consoleProgram.AllowInput = true;
-            this.consoleProgram.BackColor = System.Drawing.Color.Black;
-            this.consoleProgram.ConsoleBackgroundColor = System.Drawing.Color.Black;
-            this.consoleProgram.ConsoleForegroundColor = System.Drawing.Color.LightGray;
-            this.consoleProgram.CurrentBackgroundColor = System.Drawing.Color.Black;
-            this.consoleProgram.CurrentForegroundColor = System.Drawing.Color.LightGray;
-            this.consoleProgram.CursorType = Basice.UI.CursorTypes.Underline;
-            this.consoleProgram.EchoInput = false;
-            this.consoleProgram.ForeColor = System.Drawing.Color.LightGray;
-            this.consoleProgram.Location = new System.Drawing.Point(901, 37);
-            this.consoleProgram.Name = "consoleProgram";
-            this.consoleProgram.ProcessKeys = true;
-            this.consoleProgram.ShowCursor = true;
-            this.consoleProgram.Size = new System.Drawing.Size(646, 377);
-            this.consoleProgram.TabIndex = 2;
             // 
             // label2
             // 
@@ -107,11 +90,43 @@
             this.BtnLoadExample.UseVisualStyleBackColor = true;
             this.BtnLoadExample.Click += new System.EventHandler(this.BtnLoadExample_Click);
             // 
+            // graphicsControl1
+            // 
+            this.graphicsControl1.BackColor = System.Drawing.Color.Black;
+            this.graphicsControl1.CurrentBackgroundColor = System.Drawing.Color.Black;
+            this.graphicsControl1.CurrentForegroundColor = System.Drawing.Color.LightGray;
+            this.graphicsControl1.GraphicsControlBackgroundColor = System.Drawing.Color.Black;
+            this.graphicsControl1.GraphicsControlForegroundColor = System.Drawing.Color.LightGray;
+            this.graphicsControl1.Location = new System.Drawing.Point(901, 52);
+            this.graphicsControl1.Name = "graphicsControl1";
+            this.graphicsControl1.Size = new System.Drawing.Size(646, 377);
+            this.graphicsControl1.TabIndex = 6;
+            this.graphicsControl1.Visible = false;
+            // 
+            // consoleProgram
+            // 
+            this.consoleProgram.AllowInput = true;
+            this.consoleProgram.BackColor = System.Drawing.Color.Black;
+            this.consoleProgram.ConsoleBackgroundColor = System.Drawing.Color.Black;
+            this.consoleProgram.ConsoleForegroundColor = System.Drawing.Color.LightGray;
+            this.consoleProgram.CurrentBackgroundColor = System.Drawing.Color.Black;
+            this.consoleProgram.CurrentForegroundColor = System.Drawing.Color.LightGray;
+            this.consoleProgram.CursorType = Basice.UI.CursorTypes.Underline;
+            this.consoleProgram.EchoInput = false;
+            this.consoleProgram.ForeColor = System.Drawing.Color.LightGray;
+            this.consoleProgram.Location = new System.Drawing.Point(901, 52);
+            this.consoleProgram.Name = "consoleProgram";
+            this.consoleProgram.ProcessKeys = true;
+            this.consoleProgram.ShowCursor = true;
+            this.consoleProgram.Size = new System.Drawing.Size(646, 377);
+            this.consoleProgram.TabIndex = 2;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1571, 710);
+            this.Controls.Add(this.graphicsControl1);
             this.Controls.Add(this.BtnLoadExample);
             this.Controls.Add(this.BtnRunProgram);
             this.Controls.Add(this.label2);
@@ -133,6 +148,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button BtnRunProgram;
         private System.Windows.Forms.Button BtnLoadExample;
+        private GraphicsControl graphicsControl1;
     }
 }
 

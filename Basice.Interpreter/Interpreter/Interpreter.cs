@@ -14,6 +14,7 @@ namespace Basice.Interpreter.Interpreter
         private readonly Stack<int> _gosubStack;
         private readonly ITextOutput _textOutputDevice;
         private readonly ITextInput _textInputDevice;
+        private readonly IGraphicsOutput _graphicsOutputDevice;
         private readonly Dictionary<string, object> _variables;
         private readonly Dictionary<string, ICallable> _stdLib;
         private int _currentStatementIndex;
@@ -22,7 +23,7 @@ namespace Basice.Interpreter.Interpreter
         public ITextOutput TextOutputDevice => _textOutputDevice;
         public ITextInput TextInputDevice => _textInputDevice;
 
-        public Interpreter(List<Statement> statements, ITextOutput textOutputDevice, ITextInput textInputDevice)
+        public Interpreter(List<Statement> statements, ITextOutput textOutputDevice, ITextInput textInputDevice, IGraphicsOutput graphicsOutputDevice)
         {
             _numberData = new Queue<double>();
             _stringData = new Queue<string>();
@@ -31,6 +32,7 @@ namespace Basice.Interpreter.Interpreter
             _currentStatementIndex = 0;
             _textOutputDevice = textOutputDevice;
             _textInputDevice = textInputDevice;
+            _graphicsOutputDevice = graphicsOutputDevice;
             _variables = new Dictionary<string, object>();
             _gosubStack = new Stack<int>();
             _stdLib = new Dictionary<string, ICallable>
@@ -64,6 +66,9 @@ namespace Basice.Interpreter.Interpreter
 
         public async Task InterpretAsync()
         {
+            _textOutputDevice.Screen(1);
+            _graphicsOutputDevice.Screen(1);
+            await _graphicsOutputDevice.ResetAsync();
             _textOutputDevice.SetBackgroundColor(0, 0, 0);
             _textOutputDevice.SetForegroundColor(200, 200, 200);
             await _textOutputDevice.ClearScreenAsync();
@@ -156,6 +161,9 @@ namespace Basice.Interpreter.Interpreter
                 case nameof(Statement.LocateStatement):
                     await LocateAsync((Statement.LocateStatement)statement);
                     break;
+                case nameof(Statement.PointStatement):
+                    await PointAsync((Statement.PointStatement)statement);
+                    break;
                 case nameof(Statement.PrintStatement):
                     await Print((Statement.PrintStatement)statement);
                     break;
@@ -167,6 +175,9 @@ namespace Basice.Interpreter.Interpreter
                     break;
                 case nameof(Statement.ReturnStatement):
                     Return((Statement.ReturnStatement)statement);
+                    break;
+                case nameof(Statement.ScreenStatement):
+                    Screen((Statement.ScreenStatement)statement);
                     break;
                 case nameof(Statement.VariableArrayStatement):
                     DefineArrayVariable((Statement.VariableArrayStatement)statement);
@@ -225,12 +236,14 @@ namespace Basice.Interpreter.Interpreter
             {
                 int fc = (int)(double)foreColorObj;
                 _textOutputDevice.SetForegroundColor((fc >> 16) & 0xff, (fc >> 8) & 0xff, (fc >> 0) & 0xff);
+                _graphicsOutputDevice.SetForegroundColor((fc >> 16) & 0xff, (fc >> 8) & 0xff, (fc >> 0) & 0xff);
             }
 
             if (backColorObj != null)
             {
                 int bc = (int)(double)backColorObj;
                 _textOutputDevice.SetBackgroundColor((bc >> 16) & 0xff, (bc >> 8) & 0xff, (bc >> 0) & 0xff);
+                _graphicsOutputDevice.SetBackgroundColor((bc >> 16) & 0xff, (bc >> 8) & 0xff, (bc >> 0) & 0xff);
             }
         }
 
@@ -541,6 +554,50 @@ namespace Basice.Interpreter.Interpreter
             }
         }
 
+        private async Task PointAsync(Statement.PointStatement statement)
+        {
+            object xObj = Evaluate(statement.X);
+            object yObj = Evaluate(statement.Y);
+
+            if (!(xObj is double) || !(yObj is double))
+            {
+                throw new RuntimeException("POINT coordinates must be numbers.", statement.BasicLineNumber);
+            }
+
+            int x = (int)(double)xObj;
+            int y = (int)(double)yObj;
+
+            if (statement.Color != null)
+            {
+                object color = Evaluate(statement.Color);
+
+                if (!(color is double))
+                {
+                    throw new RuntimeException("POINT color must be a number.", statement.BasicLineNumber);
+                }
+
+                if (_graphicsOutputDevice.AsyncAvailable)
+                {
+                    await _graphicsOutputDevice.PointAsync(x, y, (int)(double)color);
+                }
+                else
+                {
+                    _graphicsOutputDevice.Point(x, y, (int)(double)color);
+                }
+
+                return;
+            }
+
+            if (_graphicsOutputDevice.AsyncAvailable)
+            {
+                await _graphicsOutputDevice.PointAsync(x, y, _graphicsOutputDevice.GetForegroundColor());
+            }
+            else
+            {
+                _graphicsOutputDevice.Point(x, y, _graphicsOutputDevice.GetForegroundColor());
+            }
+        }
+
         private void Read(Statement.ReadStatement statement)
         {
             bool isString = statement.Name.Lexeme.EndsWith("$");
@@ -607,6 +664,26 @@ namespace Basice.Interpreter.Interpreter
             }
 
             _currentStatementIndex = _gosubStack.Pop();
+        }
+
+        private void Screen(Statement.ScreenStatement statement)
+        {
+            object exp = Evaluate(statement.Number);
+
+            if (!(exp is double))
+            {
+                throw new RuntimeException("SCREEN number must a number, either 1 or 2.");
+            }
+
+            int number = (int)(double)exp;
+
+            if (number != 1 && number != 2)
+            {
+                throw new RuntimeException("SCREEN number must a number, either 1 or 2.");
+            }
+
+            _textOutputDevice.Screen(number);
+            _graphicsOutputDevice.Screen(number);
         }
 
         private void DefineArrayVariable(Statement.VariableArrayStatement statement)

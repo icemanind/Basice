@@ -180,6 +180,21 @@ namespace Basice.Interpreter.Parser
             }
         }
 
+        public class PointStatement : Statement
+        {
+            public Expression X { get; }
+            public Expression Y { get; }
+            public Expression Color { get; set; }
+
+            public PointStatement(Expression x, Expression y, Expression color, int basicLineNumber)
+            {
+                BasicLineNumber = basicLineNumber;
+                X = x;
+                Y = y;
+                Color = color;
+            }
+        }
+
         public class PrintStatement : Statement
         {
             public Expression Expression { get; }
@@ -221,6 +236,17 @@ namespace Basice.Interpreter.Parser
             public RestoreStatement(int basicLineNumber)
             {
                 BasicLineNumber = basicLineNumber;
+            }
+        }
+
+        public class ScreenStatement : Statement
+        {
+            public Expression Number { get; }
+
+            public ScreenStatement(Expression number, int basicLineNumber)
+            {
+                BasicLineNumber = basicLineNumber;
+                Number = number;
             }
         }
 
