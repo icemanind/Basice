@@ -35,6 +35,8 @@
             this.BtnLoadExample = new System.Windows.Forms.Button();
             this.graphicsControl1 = new Basice.UI.GraphicsControl();
             this.consoleProgram = new Basice.UI.ConsoleControl();
+            this.TxtErrors = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // txtProgram
@@ -121,11 +123,34 @@
             this.consoleProgram.Size = new System.Drawing.Size(646, 377);
             this.consoleProgram.TabIndex = 2;
             // 
+            // TxtErrors
+            // 
+            this.TxtErrors.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.TxtErrors.Font = new System.Drawing.Font("Consolas", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TxtErrors.Location = new System.Drawing.Point(20, 736);
+            this.TxtErrors.Multiline = true;
+            this.TxtErrors.Name = "TxtErrors";
+            this.TxtErrors.Size = new System.Drawing.Size(871, 87);
+            this.TxtErrors.TabIndex = 7;
+            this.TxtErrors.WordWrap = false;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(27, 713);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(181, 18);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "Errors show down below:";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1571, 710);
+            this.ClientSize = new System.Drawing.Size(1571, 835);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.TxtErrors);
             this.Controls.Add(this.graphicsControl1);
             this.Controls.Add(this.BtnLoadExample);
             this.Controls.Add(this.BtnRunProgram);
@@ -149,6 +174,8 @@
         private System.Windows.Forms.Button BtnRunProgram;
         private System.Windows.Forms.Button BtnLoadExample;
         private GraphicsControl graphicsControl1;
+        private System.Windows.Forms.TextBox TxtErrors;
+        private System.Windows.Forms.Label label3;
     }
 }
 

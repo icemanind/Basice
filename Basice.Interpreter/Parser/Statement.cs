@@ -151,6 +151,26 @@ namespace Basice.Interpreter.Parser
             }
         }
 
+        public class LineStatement : Statement
+        {
+            public Expression X1 { get; }
+            public Expression X2 { get; }
+            public Expression Y1 { get; }
+            public Expression Y2 { get; }
+            public Expression Color { get; }
+
+            public LineStatement(Expression x1, Expression y1, Expression x2, Expression y2, Expression color,
+                int basicLineNumber)
+            {
+                BasicLineNumber = basicLineNumber;
+                X1 = x1;
+                X2 = x2;
+                Y1 = y1;
+                Y2 = y2;
+                Color = color;
+            }
+        }
+
         public class LocateStatement : Statement
         {
             public Expression Y { get; }

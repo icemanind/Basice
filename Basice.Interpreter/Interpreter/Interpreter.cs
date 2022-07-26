@@ -159,6 +159,9 @@ namespace Basice.Interpreter.Interpreter
                 case nameof(Statement.InputStatement):
                     Input((Statement.InputStatement)statement);
                     break;
+                case nameof(Statement.LineStatement):
+                    await LineAsync((Statement.LineStatement)statement);
+                    break;
                 case nameof(Statement.LocateStatement):
                     await LocateAsync((Statement.LocateStatement)statement);
                     break;
@@ -503,6 +506,54 @@ namespace Basice.Interpreter.Interpreter
                     statement.Name.Line);
 
                 DefineArrayVariable(vas);
+            }
+        }
+
+        private async Task LineAsync(Statement.LineStatement statement)
+        {
+            object x1Obj = Evaluate(statement.X1);
+            object x2Obj = Evaluate(statement.X2);
+            object y1Obj = Evaluate(statement.Y1);
+            object y2Obj = Evaluate(statement.Y2);
+
+            if (!(x1Obj is double) || !(x2Obj is double) || !(y1Obj is double) || !(y2Obj is double))
+            {
+                throw new RuntimeException("LINE coordinates must be numbers.", statement.BasicLineNumber);
+            }
+
+            int x1 = (int)(double)x1Obj;
+            int x2 = (int)(double)x2Obj;
+            int y1 = (int)(double)y1Obj;
+            int y2 = (int)(double)y2Obj;
+
+            if (statement.Color != null)
+            {
+                object color = Evaluate(statement.Color);
+
+                if (!(color is double))
+                {
+                    throw new RuntimeException("LINE color must be a number.", statement.BasicLineNumber);
+                }
+
+                if (_graphicsOutputDevice.AsyncAvailable)
+                {
+                    await _graphicsOutputDevice.LineAsync(x1, y1, x2, y2, (int)(double)color);
+                }
+                else
+                {
+                    _graphicsOutputDevice.Line(x1, y1, x2, y2, (int)(double)color);
+                }
+
+                return;
+            }
+
+            if (_graphicsOutputDevice.AsyncAvailable)
+            {
+                await _graphicsOutputDevice.LineAsync(x1, y1, x2, y2, _graphicsOutputDevice.GetForegroundColor());
+            }
+            else
+            {
+                _graphicsOutputDevice.Line(x1, y1, x2, y2, _graphicsOutputDevice.GetForegroundColor());
             }
         }
 

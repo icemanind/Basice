@@ -174,6 +174,7 @@ namespace Basice.Interpreter.Parser
             if (Match(TokenType.Goto)) return GotoStatement();
             if (Match(TokenType.If)) return IfStatement();
             if (Match(TokenType.Input)) return InputStatement();
+            if (Match(TokenType.Line)) return LineStatement();
             if (Match(TokenType.Point)) return PointStatement();
             if (Match(TokenType.Locate)) return LocateStatement();
             if (Match(TokenType.Next)) return NextStatement();
@@ -597,6 +598,37 @@ namespace Basice.Interpreter.Parser
             return new Statement.InputStatement(name, false, null, _currentBasicLineNumber);
         }
 
+        private Statement LineStatement()
+        {
+            Expression x1 = Expression();
+
+            if (!Match(TokenType.Comma))
+            {
+                throw new ParserException(Error("Expected ',' after 'LINE' x1-coordinate.", Peek()));
+            }
+
+            Expression y1 = Expression();
+            if (!Match(TokenType.Comma))
+            {
+                throw new ParserException(Error("Expected ',' after 'LINE' y1-coordinate.", Peek()));
+            }
+
+            Expression x2 = Expression();
+            if (!Match(TokenType.Comma))
+            {
+                throw new ParserException(Error("Expected ',' after 'LINE' x2-coordinate.", Peek()));
+            }
+
+            Expression y2 = Expression();
+            Expression color = null;
+            if (Match(TokenType.Comma))
+            {
+                color = Expression();
+            }
+
+            return new Statement.LineStatement(x1, y1, x2, y2, color, _currentBasicLineNumber);
+        }
+
         private Statement PointStatement()
         {
             Expression x = Expression();
@@ -759,6 +791,7 @@ namespace Basice.Interpreter.Parser
 
         private Token Previous()
         {
+            if (_current == 0) return _tokens[_current];
             return _tokens[_current - 1];
         }
     }

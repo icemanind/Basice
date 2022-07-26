@@ -41,6 +41,16 @@ namespace Basice.UI
                    (_control.CurrentForegroundColor.B);
         }
 
+        public void Line(int x1, int y1, int x2, int y2, int color)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task LineAsync(int x1, int y1, int x2, int y2, int color)
+        {
+            await Task.Run(() => _control.DrawLine(x1, y1, x2, y2, MapIntToColor(color)));
+        }
+
         public void Point(int x, int y, int color)
         {
             throw new System.NotImplementedException();
