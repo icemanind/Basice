@@ -44,6 +44,7 @@ namespace Basice.Interpreter.Interpreter
                 { "DAY", new Stdlib.Day() },
                 { "HEX$", new Stdlib.Hex() },
                 { "HOUR", new Stdlib.Hour() },
+                { "INSTR", new Stdlib.Instr() },
                 { "INKEY$", new Stdlib.Inkey() },
                 { "INT", new Stdlib.Int() },
                 { "LEFT$", new Stdlib.Left() },

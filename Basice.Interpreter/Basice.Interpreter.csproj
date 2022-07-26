@@ -58,6 +58,7 @@
     <Compile Include="Interpreter\Stdlib\Hex.cs" />
     <Compile Include="Interpreter\Stdlib\Hour.cs" />
     <Compile Include="Interpreter\Stdlib\Inkey.cs" />
+    <Compile Include="Interpreter\Stdlib\Instr.cs" />
     <Compile Include="Interpreter\Stdlib\Int.cs" />
     <Compile Include="Interpreter\Stdlib\Left.cs" />
     <Compile Include="Interpreter\Stdlib\Len.cs" />
