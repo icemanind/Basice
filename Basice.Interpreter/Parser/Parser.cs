@@ -214,7 +214,7 @@ namespace Basice.Interpreter.Parser
             while (Match(TokenType.And))
             {
                 Token op = Previous();
-                Expression right = And();
+                Expression right = Equality();
                 expression = new Expression.Logical(expression, op, right);
             }
 
