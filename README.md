@@ -145,37 +145,6 @@ To be able to re-read the data again, you must use `RESTORE`:
     
     95 RESTORE: GOTO 30
 
-## Graphics
-#### SCREEN
-To be able to use graphics, you need to switch to a graphics screen instead of the default console text screen. To do this, you can use the `SCREEN` statement:
-
-    10 SCREEN 2
-    
-The above program will switch to the graphics screen and you can then issue graphics statements. The `SCREEN` statement will accept either `1` or `2` as a parameter. `SCREEN 1` is the default console text screen. `SCREEN 2` is the graphics screen.
-
-#### POINT
-The `POINT` statement will draw a single point on the screen at the given coordinates, in the given color. If no color is specified, then it will draw the point using the foreground color of the `COLOR` statement. Here is an example:
-
-    10 SCREEN 2
-    20 POINT 35, 50, RGB(255, 0, 0)
-    
-The program above will draw a red dot, `35` pixels right and `50` pixels down. The following program does the same exact thing:
-
-    10 SCREEN 2
-    20 COLOR RGB(255, 0, 0)
-    30 POINT 35, 50
-#### LINE
-The `LINE` statement will draw a line starting at the first coordinates specified and ending at the last coordinates specified. You can also add an optional color. Just like with the `POINT` statement, if you do not specify a color, it uses the color set from the `COLOR` statement. Here is an example:
-
-    10 SCREEN 2
-    20 LINE 35, 50, 128, 72, RGB(0, 255, 0)
-
-The program above will draw a green line starting `35` pixels right and `50` pixels down and ending at `128` pixels right and `72` pixels down. The following program does the same exact thing:
-
-    10 SCREEN 2
-    20 COLOR RGB(0, 255, 0)
-    30 LINE 35, 50, 128, 72
-
 #### CURSOR OFF / ON
 The cursor, by default, is a destructive cursor that will overwrite the character at the current position. Sometimes you may want to turn the cursor off so that it will not overwrite the character at the current position. You can do this by using the `CURSOR OFF` and `CURSOR ON` statements:
 
@@ -289,6 +258,36 @@ Basice also has the `GOSUB` statement. This statement is like the `GOTO` stateme
     
 This program will print `HELLO `, then jump to line 60 and print `WORLD!!!`, then it will return and execution will start back at line 40 and print `THIS LINE WILL EXECUTE AFTER GOSUB RETURNS!`.
 
+## Graphics
+#### SCREEN
+To be able to use graphics, you need to switch to a graphics screen instead of the default console text screen. To do this, you can use the `SCREEN` statement:
+
+    10 SCREEN 2
+    
+The above program will switch to the graphics screen and you can then issue graphics statements. The `SCREEN` statement will accept either `1` or `2` as a parameter. `SCREEN 1` is the default console text screen. `SCREEN 2` is the graphics screen.
+
+#### POINT
+The `POINT` statement will draw a single point on the screen at the given coordinates, in the given color. If no color is specified, then it will draw the point using the foreground color of the `COLOR` statement. Here is an example:
+
+    10 SCREEN 2
+    20 POINT 35, 50, RGB(255, 0, 0)
+    
+The program above will draw a red dot, `35` pixels right and `50` pixels down. The following program does the same exact thing:
+
+    10 SCREEN 2
+    20 COLOR RGB(255, 0, 0)
+    30 POINT 35, 50
+#### LINE
+The `LINE` statement will draw a line starting at the first coordinates specified and ending at the last coordinates specified. You can also add an optional color. Just like with the `POINT` statement, if you do not specify a color, it uses the color set from the `COLOR` statement. Here is an example:
+
+    10 SCREEN 2
+    20 LINE 35, 50, 128, 72, RGB(0, 255, 0)
+
+The program above will draw a green line starting `35` pixels right and `50` pixels down and ending at `128` pixels right and `72` pixels down. The following program does the same exact thing:
+
+    10 SCREEN 2
+    20 COLOR RGB(0, 255, 0)
+    30 LINE 35, 50, 128, 72
 
 
 ## Functions
