@@ -39,6 +39,7 @@ Comments are allowed and begin with an apostrophe `'`. Comments must also be on 
     10 ' This program will print HELLO WORLD!!!
     20 PRINT "HELLO WORLD!!!"
     
+## Data Types
 Basice only has two data types: strings and numbers. A string is a sequence of characters between two double quotes `""`. A number can be a whole integer number or a floating point number. Full expressions are permitted:
 
     10 ' This program will print 356.9
@@ -61,6 +62,8 @@ By default, after a `PRINT` command is issued, the cursor moves down to the next
 
 This will print `HELLO WORLD!!!` all on one line.
 
+## Variables
+
 Basice supports variables and there are two types of variables. String variables and number variables. String variables must end with a dollar sign `$` :
 
     10 PI=3.14
@@ -69,6 +72,8 @@ Basice supports variables and there are two types of variables. String variables
     40 PRINT PI
 
 This program will print `I love Pie!` to the console and then print the value `3.14` to the console. If you use a string variable without initializing it, it defaults to an empty string `""`. If you use a number variable without initializing it, it defaults to a zero `0`. 
+
+## Arrays
 
 Basice supports one and two dimensional arrays. You can create a one dimensional string array or number array like this:
 
@@ -84,6 +89,8 @@ This will print `TEST` to the console. Before you can use arrays, you must use t
     
 This will print `15` to the console. 
 
+## Commands
+#### CLS & LOCATE
 To clear the console, you can use the `CLS` statement. The `CLS` statement will clear the console and set the cursor position to `0`, `0`. To move the cursor position, you can use the `LOCATE` statement. The `LOCATE` statement will move the cursor to the given row and column. The console has 24 rows and 80 columns, so `Y` must be a number between 1 and 24 and `X` must be a number between 1 and 80. Here is an example:
 
     10 CLS
@@ -91,6 +98,85 @@ To clear the console, you can use the `CLS` statement. The `CLS` statement will 
     30 LOCATE 7, 30
     40 PRINT "HELLO WORLD!"
     
+#### COLOR
+The `COLOR` statement allows you to change the foreground (text) color and/or the background color. You can use this in conjunction with the `RGB()` function to specify a new foreground or background color. Here is an example:
+
+    10 CLS
+    20 COLOR RGB(255, 0, 0)
+    30 PRINT "THIS IS RED TEXT"
+    
+The program above will print `THIS IS RED TEXT` in red letters. The `RGB()` function takes three numbers, between `0` and `255`, for the red value, green value and blue value, respectively. The `RGB()` function then returns a number that can be passed into the `COLOR` statement. Here is an example of changing the background color:
+
+    10 CLS
+    20 COLOR ,RGB(80, 0, 80)
+    30 PRINT "THIS SHOULD HAVE A PURPLE BACKGROUND"
+    
+The program above will print `THIS SHOULD HAVE A PURPLE BACKGROUND`, but the background of the letters will be purple. You can also change both the foreground and the background colors at the same time:
+
+    10 CLS
+    20 COLOR RGB(255,255,0), RGB(80,0,80)
+    30 PRINT "THIS SHOULD BE YELLOW LETTERS ON A PURPLE BACKGROUND"
+    
+The program above will print `THIS SHOULD BE YELLOW LETTERS ON A PURPLE BACKGROUND` in yellow letters with a purple background.
+
+#### READ / DATA / RESTORE
+The `READ` command will read data from `DATA` commands. The data in the `DATA` command(s) can be numbers or strings. Here is an example:
+
+    10 CLS
+    20 DIM STATE$(13)
+    30 FOR X = 1 TO 13
+    40 READ STATE$(X)
+    50 NEXT X
+    60 PRINT "THE ORIGINAL 13 COLONIES ARE:"
+    70 FOR X = 1 TO 13
+    80 PRINT STATE$(X)
+    90 NEXT X
+    100 DATA "VIRGINIA", "MASSACHUSETTS", "RHODE ISLAND", "CONNECTICUT"
+    110 DATA "NEW HAMPSHIRE", "NEW YORK", "NEW JERSEY", "PENNSYLVANIA"
+    120 DATA "DELAWARE", "MARYLAND", "NORTH CAROLINA", "SOUTH CAROLINA"
+    130 DATA "GEORGIA"
+    
+The program above will print out the original 13 colonies to the screen. First, an array is created named `STATE$`. Next, the data is `READ` in from the `DATA` statements beginning at line `100`. Finally, another loop begins and that loop prints out each colony. Data does not need to be read into array. You can read data into a single variable, either a string variable or a number variable.
+
+The `RESTORE` statement will restore the `READ` pointer in case you need to read in the same data again. If you were to add the following line to the above program, the program would get an error, expecting to read more data:
+
+    95 GOTO 30
+To be able to re-read the data again, you must use `RESTORE`:
+    
+    95 RESTORE: GOTO 30
+
+## Graphics
+#### SCREEN
+To be able to use graphics, you need to switch to a graphics screen instead of the default console text screen. To do this, you can use the `SCREEN` statement:
+
+    10 SCREEN 2
+    
+The above program will switch to the graphics screen and you can then issue graphics statements. The `SCREEN` statement will accept either `1` or `2` as a parameter. `SCREEN 1` is the default console text screen. `SCREEN 2` is the graphics screen.
+
+#### POINT
+The `POINT` statement will draw a single point on the screen at the given coordinates, in the given color. If no color is specified, then it will draw the point using the foreground color of the `COLOR` statement. Here is an example:
+
+    10 SCREEN 2
+    20 POINT 35, 50, RGB(255, 0, 0)
+    
+The program above will draw a red dot, `35` pixels right and `50` pixels down. The following program does the same exact thing:
+
+    10 SCREEN 2
+    20 COLOR RGB(255, 0, 0)
+    30 POINT 35, 50
+#### LINE
+The `LINE` statement will draw a line starting at the first coordinates specified and ending at the last coordinates specified. You can also add an optional color. Just like with the `POINT` statement, if you do not specify a color, it uses the color set from the `COLOR` statement. Here is an example:
+
+    10 SCREEN 2
+    20 LINE 35, 50, 128, 72, RGB(0, 255, 0)
+
+The program above will draw a green line starting `35` pixels right and `50` pixels down and ending at `128` pixels right and `72` pixels down. The following program does the same exact thing:
+
+    10 SCREEN 2
+    20 COLOR RGB(0, 255, 0)
+    30 LINE 35, 50, 128, 72
+
+#### CURSOR OFF / ON
 The cursor, by default, is a destructive cursor that will overwrite the character at the current position. Sometimes you may want to turn the cursor off so that it will not overwrite the character at the current position. You can do this by using the `CURSOR OFF` and `CURSOR ON` statements:
 
     10 CLS
@@ -108,6 +194,7 @@ Running the above program will print `HELLO` at cursor position `3, 3`. It will 
 
 Running the above program will print `HELLO` and still reposition the cursor to `3, 3`, but the `H` will not be overwritten. 
 
+#### FOR / NEXT / STEP
 Basice also support the `FOR/NEXT/STEP` loop. Here is an example:
 
     10 CLS
@@ -129,6 +216,7 @@ This starts the count at `2` and for each iteration, increments by 2. You can al
     30 PRINT X
     40 NEXT X
     
+#### IF / THEN / ELSE
 Basice also supports `IF/THEN/ELSE`. You can use the `IF` statement to test if a condition is true, then do something based on that condition being true. `ELSE` can be used to do something if the condition is false. All `IF` statements must be on one line since there is no statement to end an `IF` statement. Here is an example:
 
     10 CLS
@@ -158,6 +246,7 @@ Notice when `X=3` then it prints the arrow before the number. If you wanted to p
     40 PRINT X
     50 NEXT X
     
+#### END
 Another useful statement is the `END` statement. This command simply ends the program. Here is an example:
 
     10 CLS
@@ -168,6 +257,7 @@ Another useful statement is the `END` statement. This command simply ends the pr
     
 This will print the numbers `1-7`, but the program ends after the 8th iteration. 
 
+#### INPUT
 Basice also supports the `INPUT` statement. This statement will prompt the user to enter something. The program then waits for a user to enter something before continuing execution. Whatever the user types is stored in a string variable. Here is an example:
 
     10 CLS
@@ -175,7 +265,35 @@ Basice also supports the `INPUT` statement. This statement will prompt the user 
     30 INPUT NAME$
     40 PRINT "WELL HELLO, " + NAME$
     
-In addition to `INPUT`,  Basice also has an `INKEY$` function. This function checks to see if a key has been pressed. If it has, it returns the pressed key. If no key was pressed, then it returns a value of zero. Here is an example:
+#### GOTO
+Basice supports the `GOTO` statement. This statement causes program execution to jump to another line in the program. Here is an example:
+
+    10 CLS
+    20 PRINT "HELLO ";
+    30 GOTO 50
+    40 PRINT "THIS LINE WILL NEVER EXECUTE!"
+    50 PRINT "WORLD!!!"
+
+The program will print `HELLO WORLD!!!`. This is because line 30 jumps to line 50 and line 40 is never executed.
+
+#### GOSUB / RETURN
+Basice also has the `GOSUB` statement. This statement is like the `GOTO` statement, except, you can use `RETURN` to jump back to the `GOSUB` command and execution resumes where it left off. Here is an example:
+
+    10 CLS
+    20 PRINT "HELLO ";
+    30 GOSUB 60
+    40 PRINT "THIS LINE WILL EXECUTE AFTER GOSUB RETURNS!"
+    50 END
+    60 PRINT "WORLD!!!"
+    70 RETURN
+    
+This program will print `HELLO `, then jump to line 60 and print `WORLD!!!`, then it will return and execution will start back at line 40 and print `THIS LINE WILL EXECUTE AFTER GOSUB RETURNS!`.
+
+
+
+## Functions
+#### INKEY$()
+In addition to `INPUT`,  Basice also has an `INKEY$()` function. This function checks to see if a key has been pressed. If it has, it returns the pressed key. If no key was pressed, then it returns a value of zero. Here is an example:
 
     10 CLS
     20 PRINT "PRESS A KEY"
@@ -185,7 +303,7 @@ In addition to `INPUT`,  Basice also has an `INKEY$` function. This function che
     
 The program above uses `INKEY$` function to check if a key was pressed. If there hasn't, then it just keeps checking. When a key finally gets pressed, it prints it to the screen. 
 
-There are several math functions built in:
+Here is a summary of all functions in Basice:
 
 | Function   | Description                                                                                                                                                                                                                                          | Example                                                                              |
 |------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|
