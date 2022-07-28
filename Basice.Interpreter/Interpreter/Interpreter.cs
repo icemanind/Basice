@@ -144,6 +144,9 @@ namespace Basice.Interpreter.Interpreter
                 case nameof(Statement.DimStatement):
                     Dim((Statement.DimStatement)statement);
                     break;
+                case nameof(Statement.DrawTextStatement):
+                    DrawText((Statement.DrawTextStatement)statement);
+                    break;
                 case nameof(Statement.EllipseStatement):
                     Ellipse((Statement.EllipseStatement)statement);
                     break;
@@ -388,6 +391,40 @@ namespace Basice.Interpreter.Interpreter
 
                     _variables.Add(statement.Name.Lexeme.ToUpper(), r);
                 }
+            }
+        }
+
+        private async void DrawText(Statement.DrawTextStatement statement)
+        {
+            object xObj = Evaluate(statement.X);
+            object yObj = Evaluate(statement.Y);
+            object textObj = Evaluate(statement.Text);
+            object sizeObj = Evaluate(statement.Size);
+            object colorObj = Evaluate(statement.Color);
+
+            if (!(xObj is double) || !(yObj is double) || !(sizeObj is double))
+            {
+                throw new RuntimeException("DRAWTEXT coordinates and size must be numbers.", statement.BasicLineNumber);
+            }
+
+            if (!(textObj is string))
+            {
+                throw new RuntimeException("DRAWTEXT text must be a string.");
+            }
+
+            int x = (int)(double)xObj;
+            int y = (int)(double)yObj;
+            string text = (string)textObj;
+            double size = (double)sizeObj;
+            int color = colorObj == null ? _graphicsOutputDevice.GetForegroundColor() : (int)(double)colorObj;
+
+            if (_graphicsOutputDevice.AsyncAvailable)
+            {
+                await _graphicsOutputDevice.DrawTextAsync(x, y, text, size, color);
+            }
+            else
+            {
+                _graphicsOutputDevice.DrawText(x, y, text, size, color);
             }
         }
 

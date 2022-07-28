@@ -169,6 +169,7 @@ namespace Basice.Interpreter.Parser
             if (Match(TokenType.Cursor)) return CursorStatement();
             if (Match(TokenType.Data)) return DataStatement();
             if (Match(TokenType.Dim)) return DimStatement();
+            if (Match(TokenType.DrawText)) return DrawTextStatement();
             if (Match(TokenType.Ellipse)) return EllipseStatement();
             if (Match(TokenType.End)) return EndStatement();
             if (Match(TokenType.For)) return ForStatement();
@@ -508,6 +509,38 @@ namespace Basice.Interpreter.Parser
             }
 
             return new Statement.DimStatement(identifier, capacities, _currentBasicLineNumber);
+        }
+
+        private Statement DrawTextStatement()
+        {
+            Expression x = Expression();
+
+            if (!Match(TokenType.Comma))
+            {
+                throw new ParserException(Error($"Expected ',' after DRAWTEXT x-coordinate.", Previous()));
+            }
+
+            Expression y = Expression();
+            if (!Match(TokenType.Comma))
+            {
+                throw new ParserException(Error($"Expected ',' after DRAWTEXT y-coordinate.", Previous()));
+            }
+
+            Expression text = Expression();
+            if (!Match(TokenType.Comma))
+            {
+                throw new ParserException(Error($"Expected ',' after DRAWTEXT text.", Previous()));
+            }
+
+            Expression size = Expression();
+            Expression color = null;
+
+            if (Match(TokenType.Comma))
+            {
+                color = Expression();
+            }
+
+            return new Statement.DrawTextStatement(x, y, text, size, color);
         }
 
         private Statement EllipseStatement()

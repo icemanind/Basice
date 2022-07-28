@@ -14,7 +14,7 @@
         NewLine,
 
         // Statements
-        And, Arc, Cls, Color, Cursor, Data, Dim, Ellipse, Else, End, For, Gosub, 
+        And, Arc, Cls, Color, Cursor, Data, Dim, DrawText, Ellipse, Else, End, For, Gosub, 
         Goto, If, Input, Line, Locate, Next, Not, Off, On, Or, Point, Print, Read, 
         Restore, Return, Screen, Step, Then, To,
 

@@ -39,6 +39,16 @@ namespace Basice.UI
             throw new System.NotImplementedException();
         }
 
+        public void DrawText(int x, int y, string text, double size, int color)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task DrawTextAsync(int x, int y, string text, double size, int color)
+        {
+            await Task.Run(() => _control.DrawText(x, y, text, size, MapIntToColor(color)));
+        }
+
         public void Ellipse(int x, int y, double width, double height, int color)
         {
             throw new System.NotImplementedException();

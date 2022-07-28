@@ -96,6 +96,24 @@ namespace Basice.Interpreter.Parser
             }
         }
 
+        public class DrawTextStatement : Statement
+        {
+            public Expression X { get; }
+            public Expression Y { get; }
+            public Expression Size { get; }
+            public Expression Text { get; }
+            public Expression Color { get; }
+
+            public DrawTextStatement(Expression x, Expression y, Expression text, Expression size, Expression color)
+            {
+                Text = text;
+                Size = size;
+                X = x;
+                Y = y;
+                Color = color;
+            }
+        }
+
         public class EllipseStatement : Statement
         {
             public Expression X { get; }

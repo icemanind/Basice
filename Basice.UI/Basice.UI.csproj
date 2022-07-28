@@ -67,6 +67,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GraphicsControlCommands\ArcCommand.cs" />
+    <Compile Include="GraphicsControlCommands\DrawTextCommand.cs" />
     <Compile Include="GraphicsControlCommands\EllipseCommand.cs" />
     <Compile Include="GraphicsControlCommands\IGraphicsCommand.cs" />
     <Compile Include="GraphicsControlCommands\LineCommand.cs" />
@@ -105,6 +106,7 @@
     <EmbeddedResource Include="Examples\Factors.basice" />
     <EmbeddedResource Include="Examples\Hangman.basice" />
     <EmbeddedResource Include="Examples\Clock.basice" />
+    <EmbeddedResource Include="Examples\Colorbars.basice" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

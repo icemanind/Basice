@@ -30,6 +30,7 @@ namespace Basice.Interpreter.Lexer
             _keywords.Add("CURSOR", TokenType.Cursor);
             _keywords.Add("DATA", TokenType.Data);
             _keywords.Add("DIM", TokenType.Dim);
+            _keywords.Add("DRAWTEXT", TokenType.DrawText);
             _keywords.Add("ELLIPSE", TokenType.Ellipse);
             _keywords.Add("ELSE", TokenType.Else);
             _keywords.Add("END", TokenType.End);

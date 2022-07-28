@@ -82,6 +82,10 @@ namespace Basice.UI
                         ArcCommand cc = (ArcCommand)command;
                         g.DrawArc(new Pen(cc.Color), cc.X, cc.Y, (float)cc.Width, (float)cc.Height, (float)cc.Start, (float)cc.End);
                         break;
+                    case nameof(DrawTextCommand):
+                        DrawTextCommand dc = (DrawTextCommand)command;
+                        g.DrawString(dc.Text, new Font("Consolas", (float)dc.Size), new SolidBrush(dc.Color), dc.X, dc.Y);
+                        break;
                     case nameof(EllipseCommand):
                         EllipseCommand ec = (EllipseCommand)command;
                         g.DrawEllipse(new Pen(ec.Color), ec.X, ec.Y, (float)ec.Width, (float)ec.Height);
@@ -136,6 +140,12 @@ namespace Basice.UI
         public void DrawRectangle(int x1, int y1, int x2, int y2, Color color)
         {
             _commands.Add(new RectangleCommand(x1, y1, x2, y2, color));
+            Invalidate();
+        }
+
+        public void DrawText(int x, int y, string text, double size, Color color)
+        {
+            _commands.Add(new DrawTextCommand(x, y, text, size, color));
             Invalidate();
         }
     }

@@ -9,6 +9,8 @@ namespace Basice.Interpreter.Interpreter
         bool AsyncAvailable { get; }
         void ClearScreen(int color);
         Task ClearScreenAsync(int color);
+        void DrawText(int x, int y, string text, double size, int color);
+        Task DrawTextAsync(int x, int y, string text, double size, int color);
         void Ellipse(int x, int y, double width, double height, int color);
         Task EllipseAsync(int x, int y, double width, double height, int color);
         int GetBackgroundColor();

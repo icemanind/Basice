@@ -315,6 +315,14 @@ The example above draws a red ellipse at `35, 50` with a radius of `100`. If the
     
 The above example will draw a green ellipse at `35, 50` with a radius of `100`.
 
+#### DRAWTEXT
+The `DRAWTEXT` commands allows you to write text to the graphics screen. Here is an example:
+
+    10 SCREEN 2
+    20 DRAWTEXT 30, 50, "HELLO WORLD!!", 25, RGB(0, 255, 0)
+
+The program above will draw the string `HELLO WORLD!!` at `30, 50` using a `25` point font in green letters.
+
 ## Functions
 #### INKEY$()
 In addition to `INPUT`,  Basice also has an `INKEY$()` function. This function checks to see if a key has been pressed. If it has, it returns the pressed key. If no key was pressed, then it returns a value of zero. Here is an example:
