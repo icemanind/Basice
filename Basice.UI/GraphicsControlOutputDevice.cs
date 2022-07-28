@@ -17,6 +17,16 @@ namespace Basice.UI
             return Color.FromArgb(red, green, blue);
         }
 
+        public void Arc(int x, int y, double width, double height, int color, double start, double end)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task ArcAsync(int x, int y, double width, double height, int color, double start, double end)
+        {
+            await Task.Run(() => _control.DrawArc(x, y, width, height, MapIntToColor(color), start, end));
+        }
+
         public bool AsyncAvailable => true;
 
         public void ClearScreen(int color)
@@ -27,6 +37,16 @@ namespace Basice.UI
         public Task ClearScreenAsync(int color)
         {
             throw new System.NotImplementedException();
+        }
+
+        public void Ellipse(int x, int y, double width, double height, int color)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task EllipseAsync(int x, int y, double width, double height, int color)
+        {
+            await Task.Run(() => _control.DrawEllipse(x, y, width, height, MapIntToColor(color)));
         }
 
         public int GetBackgroundColor()

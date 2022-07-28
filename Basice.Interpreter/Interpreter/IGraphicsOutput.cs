@@ -4,9 +4,13 @@ namespace Basice.Interpreter.Interpreter
 {
     public interface IGraphicsOutput
     {
+        void Arc(int x, int y, double width, double height, int color, double start, double end);
+        Task ArcAsync(int x, int y, double width, double height, int color, double start, double end);
         bool AsyncAvailable { get; }
         void ClearScreen(int color);
         Task ClearScreenAsync(int color);
+        void Ellipse(int x, int y, double width, double height, int color);
+        Task EllipseAsync(int x, int y, double width, double height, int color);
         int GetBackgroundColor();
         int GetForegroundColor();
         void Line(int x1, int y1, int x2, int y2, int color);

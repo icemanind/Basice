@@ -24,11 +24,13 @@ namespace Basice.Interpreter.Lexer
             _line = 1;
 
             _keywords.Add("AND", TokenType.And);
+            _keywords.Add("ARC", TokenType.Arc);
             _keywords.Add("CLS", TokenType.Cls);
             _keywords.Add("COLOR", TokenType.Color);
             _keywords.Add("CURSOR", TokenType.Cursor);
             _keywords.Add("DATA", TokenType.Data);
             _keywords.Add("DIM", TokenType.Dim);
+            _keywords.Add("ELLIPSE", TokenType.Ellipse);
             _keywords.Add("ELSE", TokenType.Else);
             _keywords.Add("END", TokenType.End);
             _keywords.Add("FOR", TokenType.For);

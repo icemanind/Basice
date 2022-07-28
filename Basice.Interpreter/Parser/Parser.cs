@@ -163,11 +163,13 @@ namespace Basice.Interpreter.Parser
 
         private Statement Statement()
         {
+            if (Match(TokenType.Arc)) return ArcStatement();
             if (Match(TokenType.Cls)) return ClsStatement();
             if (Match(TokenType.Color)) return ColorStatement();
             if (Match(TokenType.Cursor)) return CursorStatement();
             if (Match(TokenType.Data)) return DataStatement();
             if (Match(TokenType.Dim)) return DimStatement();
+            if (Match(TokenType.Ellipse)) return EllipseStatement();
             if (Match(TokenType.End)) return EndStatement();
             if (Match(TokenType.For)) return ForStatement();
             if (Match(TokenType.Gosub)) return GosubStatement();
@@ -361,6 +363,49 @@ namespace Basice.Interpreter.Parser
 
         #region "Statements"
 
+        private Statement ArcStatement()
+        {
+            Expression x = Expression();
+
+            if (!Match(TokenType.Comma))
+            {
+                throw new ParserException(Error($"Expected ',' after ARC x-coordinate.", Previous()));
+            }
+
+            Expression y = Expression();
+            if (!Match(TokenType.Comma))
+            {
+                throw new ParserException(Error($"Expected ',' after ARC y-coordinate.", Previous()));
+            }
+
+            Expression width = Expression();
+            if (!Match(TokenType.Comma))
+            {
+                throw new ParserException(Error($"Expected ',' after ARC width.", Previous()));
+            }
+
+            Expression height = Expression();
+            Expression color = null;
+            Expression start = null;
+            Expression end = null;
+
+            if (Match(TokenType.Comma))
+            {
+                color = Expression();
+
+                if (Match(TokenType.Comma))
+                {
+                    start = Expression();
+                    if (Match(TokenType.Comma))
+                    {
+                        end = Expression();
+                    }
+                }
+            }
+
+            return new Statement.ArcStatement(x, y, width, height, color, start, end);
+        }
+
         private Statement ClsStatement()
         {
             return new Statement.ClsStatement(_currentBasicLineNumber);
@@ -463,6 +508,38 @@ namespace Basice.Interpreter.Parser
             }
 
             return new Statement.DimStatement(identifier, capacities, _currentBasicLineNumber);
+        }
+
+        private Statement EllipseStatement()
+        {
+            Expression x = Expression();
+
+            if (!Match(TokenType.Comma))
+            {
+                throw new ParserException(Error($"Expected ',' after ELLIPSE x-coordinate.", Previous()));
+            }
+
+            Expression y = Expression();
+            if (!Match(TokenType.Comma))
+            {
+                throw new ParserException(Error($"Expected ',' after ELLIPSE y-coordinate.", Previous()));
+            }
+
+            Expression width = Expression();
+            if (!Match(TokenType.Comma))
+            {
+                throw new ParserException(Error($"Expected ',' after ELLIPSE width.", Previous()));
+            }
+
+            Expression height = Expression();
+            Expression color = null;
+
+            if (Match(TokenType.Comma))
+            {
+                color = Expression();
+            }
+
+            return new Statement.EllipseStatement(x, y, width, height, color);
         }
 
         private Statement EndStatement()

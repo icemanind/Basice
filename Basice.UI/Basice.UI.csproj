@@ -66,6 +66,8 @@
     <Compile Include="GraphicsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="GraphicsControlCommands\ArcCommand.cs" />
+    <Compile Include="GraphicsControlCommands\EllipseCommand.cs" />
     <Compile Include="GraphicsControlCommands\IGraphicsCommand.cs" />
     <Compile Include="GraphicsControlCommands\LineCommand.cs" />
     <Compile Include="GraphicsControlCommands\RectangleCommand.cs" />

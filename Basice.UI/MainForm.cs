@@ -18,6 +18,12 @@ namespace Basice.UI
         public MainForm()
         {
             InitializeComponent();
+
+            txtProgram.Text = "10 SCREEN 2" + Environment.NewLine + "20 ELLIPSE 10,15,30,30,RGB(255,0,0)";
+            //consoleProgram.Visible = false;
+            //graphicsControl1.Visible = true;
+            //graphicsControl1.DrawArc(128, 96, 10, 20, Color.White, 0, 360);
+            //graphicsControl1.DrawEllipse(200, 200, 50, 50, Color.Aquamarine);
         }
 
         private async void BtnRunProgram_Click(object sender, EventArgs e)

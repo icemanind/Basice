@@ -288,7 +288,32 @@ The program above will draw a green line starting `35` pixels right and `50` pix
     10 SCREEN 2
     20 COLOR RGB(0, 255, 0)
     30 LINE 35, 50, 128, 72
+#### ARC
+The `ARC` statement will draw an arc representing a portion of a circle. You must specify an x-coordinate, a y-coordinate, a width, a height and an optional color and optional start and end parameters. Here is an example:
 
+    10 SCREEN 2
+    20 ARC 35, 50, 100, 100, RGB(255, 0, 0), 0, 360
+
+The example above will draw a red circle at `35, 50` with a radius of `100`. Because the starting degrees is `0` and the ending degrees is `360`, this will draw a complete circle. Here is another example:
+
+    10 SCREEN 2
+    20 ARC 35, 50, 100, 100, RGB(255, 0, 0), 90, 180
+
+The example above draws the left side of a circle. Remember that angles are measured in degrees starting from the x-axis and going clockwise. 
+
+#### ELLIPSE
+The `ELLIPSE` statement will draw an ellipse at the specified coordinates with a height and a width and an optional color. Here is an example:
+
+    10 SCREEN 2
+    20 ELLIPSE 35, 50, 100, 100, RGB(255, 0, 0)
+    
+The example above draws a red ellipse at `35, 50` with a radius of `100`. If the color is not specified, then it will use the current foreground color. Here is an example:
+
+    10 SCREEN 2
+    20 COLOR RGB(0,255,0)
+    30 ELLIPSE 35, 50, 100, 100
+    
+The above example will draw a green ellipse at `35, 50` with a radius of `100`.
 
 ## Functions
 #### INKEY$()

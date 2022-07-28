@@ -124,6 +124,9 @@ namespace Basice.Interpreter.Interpreter
             }
             switch (statement.GetType().Name)
             {
+                case nameof(Statement.ArcStatement):
+                    await ArcAsync((Statement.ArcStatement)statement);
+                    break;
                 case nameof(Statement.Block):
                     await BlockAsync((Statement.Block)statement);
                     break;
@@ -140,6 +143,9 @@ namespace Basice.Interpreter.Interpreter
                     break;
                 case nameof(Statement.DimStatement):
                     Dim((Statement.DimStatement)statement);
+                    break;
+                case nameof(Statement.EllipseStatement):
+                    Ellipse((Statement.EllipseStatement)statement);
                     break;
                 case nameof(Statement.EndStatement):
                     End();
@@ -193,6 +199,39 @@ namespace Basice.Interpreter.Interpreter
         }
 
         #region "Statement Methods"
+
+        private async Task ArcAsync(Statement.ArcStatement statement)
+        {
+            object xObj = Evaluate(statement.X);
+            object yObj = Evaluate(statement.Y);
+            object widthObj = Evaluate(statement.Width);
+            object heightObj = Evaluate(statement.Height);
+            object colorObj = Evaluate(statement.Color);
+            object startObj = Evaluate(statement.Start);
+            object endObj = Evaluate(statement.End);
+
+            if (!(xObj is double) || !(yObj is double) || !(widthObj is double) || !(heightObj is double))
+            {
+                throw new RuntimeException("ARC parameters must be numbers.", statement.BasicLineNumber);
+            }
+
+            int x = (int)(double)xObj;
+            int y = (int)(double)yObj;
+            double width = (double)widthObj;
+            double height = (double)heightObj;
+            double start = startObj == null ? 0 : (double)startObj;
+            double end = endObj == null ? 360 : (double)endObj;
+            int color = colorObj == null ? _graphicsOutputDevice.GetForegroundColor() : (int)(double)colorObj;
+
+            if (_graphicsOutputDevice.AsyncAvailable)
+            {
+                await _graphicsOutputDevice.ArcAsync(x, y, width, height, color, start, end);
+            }
+            else
+            {
+                _graphicsOutputDevice.Arc(x, y, width, height, color, start, end);
+            }
+        }
 
         private async Task BlockAsync(Statement.Block statements)
         {
@@ -349,6 +388,35 @@ namespace Basice.Interpreter.Interpreter
 
                     _variables.Add(statement.Name.Lexeme.ToUpper(), r);
                 }
+            }
+        }
+
+        private async void Ellipse(Statement.EllipseStatement statement)
+        {
+            object xObj = Evaluate(statement.X);
+            object yObj = Evaluate(statement.Y);
+            object widthObj = Evaluate(statement.Width);
+            object heightObj = Evaluate(statement.Height);
+            object colorObj = Evaluate(statement.Color);
+
+            if (!(xObj is double) || !(yObj is double) || !(widthObj is double) || !(heightObj is double))
+            {
+                throw new RuntimeException("ELLIPSE parameters must be numbers.", statement.BasicLineNumber);
+            }
+
+            int x = (int)(double)xObj;
+            int y = (int)(double)yObj;
+            double width = (double)widthObj;
+            double height = (double)heightObj;
+            int color = colorObj == null ? _graphicsOutputDevice.GetForegroundColor() : (int)(double)colorObj;
+
+            if (_graphicsOutputDevice.AsyncAvailable)
+            {
+                await _graphicsOutputDevice.EllipseAsync(x, y, width, height, color);
+            }
+            else
+            {
+                _graphicsOutputDevice.Ellipse(x, y, width, height, color);
             }
         }
 
@@ -841,6 +909,8 @@ namespace Basice.Interpreter.Interpreter
 
         private object Evaluate(Expression expression)
         {
+            if (expression == null) return null;
+
             switch (expression.GetType().Name)
             {
                 case nameof(Expression.Binary):

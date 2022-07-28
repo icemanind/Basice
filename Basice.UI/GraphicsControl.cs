@@ -78,6 +78,14 @@ namespace Basice.UI
             {
                 switch (command.GetType().Name)
                 {
+                    case nameof(ArcCommand):
+                        ArcCommand cc = (ArcCommand)command;
+                        g.DrawArc(new Pen(cc.Color), cc.X, cc.Y, (float)cc.Width, (float)cc.Height, (float)cc.Start, (float)cc.End);
+                        break;
+                    case nameof(EllipseCommand):
+                        EllipseCommand ec = (EllipseCommand)command;
+                        g.DrawEllipse(new Pen(ec.Color), ec.X, ec.Y, (float)ec.Width, (float)ec.Height);
+                        break;
                     case nameof(LineCommand):
                         LineCommand lc = (LineCommand)command;
                         g.DrawLine(new Pen(lc.Color), lc.X1, lc.Y1, lc.X2, lc.Y2);
@@ -99,6 +107,18 @@ namespace Basice.UI
                         break;
                 }
             }
+        }
+
+        public void DrawArc(int x, int y, double width, double height, Color color, double start, double end)
+        {
+            _commands.Add(new ArcCommand(x, y, width, height, color, start, end));
+            Invalidate();
+        }
+
+        public void DrawEllipse(int x, int y, double width, double height, Color color)
+        {
+            _commands.Add(new EllipseCommand(x, y, width, height, color));
+            Invalidate();
         }
 
         public void DrawLine(int x1, int y1, int x2, int y2, Color color)

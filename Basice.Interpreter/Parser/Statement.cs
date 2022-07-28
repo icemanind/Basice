@@ -7,6 +7,28 @@ namespace Basice.Interpreter.Parser
     {
         public int BasicLineNumber { get; set; }
 
+        public class ArcStatement : Statement
+        {
+            public Expression X { get; }
+            public Expression Y { get; }
+            public Expression Width { get; }
+            public Expression Height { get; }
+            public Expression Color { get; }
+            public Expression Start { get; }
+            public Expression End { get; }
+
+            public ArcStatement(Expression x, Expression y, Expression width, Expression height, Expression color, Expression start, Expression end)
+            {
+                X = x;
+                Y = y;
+                Width = width;
+                Height = height;
+                Color = color;
+                Start = start;
+                End = end;
+            }
+        }
+
         public class Block : Statement
         {
             public List<Statement> Statements { get; }
@@ -71,6 +93,24 @@ namespace Basice.Interpreter.Parser
                 BasicLineNumber = basicLineNumber;
                 Name = name;
                 Capacities = capacities;
+            }
+        }
+
+        public class EllipseStatement : Statement
+        {
+            public Expression X { get; }
+            public Expression Y { get; }
+            public Expression Width { get; }
+            public Expression Height { get; }
+            public Expression Color { get; }
+
+            public EllipseStatement(Expression x, Expression y, Expression width, Expression height, Expression color)
+            {
+                X = x;
+                Y = y;
+                Width = width;
+                Height = height;
+                Color = color;
             }
         }
 
