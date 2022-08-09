@@ -1,4 +1,5 @@
-﻿using Basice.UI.GraphicsControlCommands;
+﻿using System;
+using Basice.UI.GraphicsControlCommands;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -10,6 +11,7 @@ namespace Basice.UI
         private readonly List<IGraphicsCommand> _commands;
         private Color _currentForegroundColor;
         private Color _currentBackgroundColor;
+        private readonly List<char> _keysBuffer;
 
         public Color CurrentForegroundColor
         {
@@ -39,12 +41,33 @@ namespace Basice.UI
             Width = 646;
             Height = 377;
 
+            _keysBuffer = new List<char>();
             _commands = new List<IGraphicsCommand>(10000);
 
             GraphicsControlBackgroundColor = Color.Black;
             GraphicsControlForegroundColor = Color.LightGray;
             CurrentForegroundColor = Color.LightGray;
             CurrentBackgroundColor = Color.Black;
+
+            KeyPress += GraphicsControl_KeyPress;
+        }
+
+        private void GraphicsControl_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 8)
+            {
+                if (_keysBuffer.Count == 0)
+                    return;
+                _keysBuffer.RemoveAt(_keysBuffer.Count - 1);
+                return;
+            }
+            _keysBuffer.Add(e.KeyChar);
+
+            if (e.KeyChar == '\r')
+            {
+                if (Environment.NewLine.Length == 2)
+                    _keysBuffer.Add('\n');
+            }
         }
 
         public void ResetGraphics()

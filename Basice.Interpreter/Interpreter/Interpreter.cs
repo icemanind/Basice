@@ -14,6 +14,7 @@ namespace Basice.Interpreter.Interpreter
         private readonly Stack<int> _gosubStack;
         private readonly ITextOutput _textOutputDevice;
         private readonly ITextInput _textInputDevice;
+        private readonly IGraphicsInput _graphicsInputDevice;
         private readonly IGraphicsOutput _graphicsOutputDevice;
         private readonly Dictionary<string, object> _variables;
         private readonly Dictionary<string, ICallable> _stdLib;
@@ -22,8 +23,9 @@ namespace Basice.Interpreter.Interpreter
 
         public ITextOutput TextOutputDevice => _textOutputDevice;
         public ITextInput TextInputDevice => _textInputDevice;
+        public IGraphicsInput GraphicsInputDevice => _graphicsInputDevice;
 
-        public Interpreter(List<Statement> statements, ITextOutput textOutputDevice, ITextInput textInputDevice, IGraphicsOutput graphicsOutputDevice)
+        public Interpreter(List<Statement> statements, ITextOutput textOutputDevice, ITextInput textInputDevice, IGraphicsInput graphicsInputDevice, IGraphicsOutput graphicsOutputDevice)
         {
             _numberData = new Queue<double>();
             _stringData = new Queue<string>();
@@ -32,6 +34,7 @@ namespace Basice.Interpreter.Interpreter
             _currentStatementIndex = 0;
             _textOutputDevice = textOutputDevice;
             _textInputDevice = textInputDevice;
+            _graphicsInputDevice = graphicsInputDevice;
             _graphicsOutputDevice = graphicsOutputDevice;
             _variables = new Dictionary<string, object>();
             _gosubStack = new Stack<int>();
@@ -75,6 +78,7 @@ namespace Basice.Interpreter.Interpreter
             await _textOutputDevice.ClearScreenAsync();
             _endHit = false;
             _textInputDevice.ClearBuffer();
+            _graphicsInputDevice.ClearBuffer();
             _variables.Clear();
             _gosubStack.Clear();
             _numberData.Clear();

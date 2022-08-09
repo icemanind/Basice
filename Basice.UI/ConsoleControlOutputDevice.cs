@@ -67,6 +67,11 @@ namespace Basice.UI
             return int.Parse(hex, NumberStyles.HexNumber);
         }
 
+        public int GetScreen()
+        {
+            return _control.Visible ? 1 : 2;
+        }
+
         public void Print(string text)
         {
             throw new NotImplementedException();
@@ -80,6 +85,8 @@ namespace Basice.UI
         public void Screen(int number)
         {
             _control.Visible = number == 1;
+
+            if (_control.Visible) _control.Focus();
         }
 
         public void SetBackgroundColor(int red, int green, int blue)

@@ -12,6 +12,7 @@ namespace Basice.Interpreter.Interpreter
         int GetBackgroundColor();
         CursorLocation GetCursorPosition();
         int GetForegroundColor();
+        int GetScreen();
         void Print(string text);
         Task PrintAsync(string text);
         void Screen(int number);

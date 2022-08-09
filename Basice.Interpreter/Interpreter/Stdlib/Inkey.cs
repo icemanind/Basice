@@ -12,9 +12,12 @@ namespace Basice.Interpreter.Interpreter.Stdlib
 
         public object Call(Interpreter interpreter, Token token, List<object> arguments)
         {
-            char c = interpreter.TextInputDevice.GetNextChar();
+            if (interpreter.TextOutputDevice.GetScreen() == 1)
+            {
+                return interpreter.TextInputDevice.GetNextChar().ToString();
+            }
 
-            return c.ToString();
+            return interpreter.GraphicsInputDevice.GetNextChar().ToString();
         }
     }
 }

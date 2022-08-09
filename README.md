@@ -264,7 +264,7 @@ To be able to use graphics, you need to switch to a graphics screen instead of t
 
     10 SCREEN 2
     
-The above program will switch to the graphics screen and you can then issue graphics statements. The `SCREEN` statement will accept either `1` or `2` as a parameter. `SCREEN 1` is the default console text screen. `SCREEN 2` is the graphics screen.
+The above program will switch to the graphics screen and you can then issue graphics statements. The `SCREEN` statement will accept either `1` or `2` as a parameter. `SCREEN 1` is the default console text screen. `SCREEN 2` is the graphics screen. As a performance tip, you will usually want to draw all your graphics using `SCREEN 1`, then switch to `SCREEN 2` to display the graphics screen. 
 
 #### POINT
 The `POINT` statement will draw a single point on the screen at the given coordinates, in the given color. If no color is specified, then it will draw the point using the foreground color of the `COLOR` statement. Here is an example:

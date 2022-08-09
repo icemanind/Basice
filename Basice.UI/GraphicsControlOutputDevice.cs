@@ -104,6 +104,7 @@ namespace Basice.UI
         public void Screen(int number)
         {
             _control.Visible = number == 2;
+            if (_control.Visible) _control.Focus();
         }
 
         public void SetBackgroundColor(int red, int green, int blue)

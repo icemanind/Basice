@@ -46,6 +46,7 @@
     <Compile Include="Exceptions\RuntimeException.cs" />
     <Compile Include="Interpreter\CursorLocation.cs" />
     <Compile Include="Interpreter\ICallable.cs" />
+    <Compile Include="Interpreter\IGraphicsInput.cs" />
     <Compile Include="Interpreter\IGraphicsOutput.cs" />
     <Compile Include="Interpreter\Interpreter.cs" />
     <Compile Include="Interpreter\ITextInput.cs" />

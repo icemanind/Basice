@@ -35,10 +35,11 @@ namespace Basice.UI
                 consoleProgram.Reset();
                 var outputDevice = new ConsoleControlOutputDevice(consoleProgram);
                 var inputDevice = new ConsoleControlInputDevice(consoleProgram);
+                var graphicsInputDevice = new GraphicsControlInputDevice(graphicsControl1);
                 var graphicsOutputDevice = new GraphicsControlOutputDevice(graphicsControl1);
                 var interpreter =
                     new Interpreter.Interpreter.Interpreter(statements, outputDevice, inputDevice,
-                        graphicsOutputDevice);
+                        graphicsInputDevice, graphicsOutputDevice);
 
                 await interpreter.InterpretAsync();
             }
