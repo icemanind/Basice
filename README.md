@@ -6,7 +6,7 @@ Basice (pronounced like *basis*) is a simple open source interpreter for a vinta
 
 Basice comes with a class project that includes a lexical analyzer, a parser and an interpreter. The lexical analyzer (or lexer) converts input into a stream of tokens. These tokens are then fed into the parser. The parser parses the tokens and create a syntax tree from the tokens. Finally, this syntax tree is fed into the interpreter and the interpreter interprets the tree and produces output.
 
-Basice also comes with a simple WinForms application that allows you to create and edit a BASIC program and a simulated console window. Once you type in your BASIC program, you can run the program and you will see the output on the simulate console.  
+Basice also comes with a simple WinForms application that allows you to create and edit a BASIC program and a simulated console window. Once you type in your BASIC program, you can run the program and you will see the output on the simulated console.  
 
 ## Getting Started
 
